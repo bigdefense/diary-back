@@ -1,12 +1,12 @@
-import { Request, Response, NextFunction } from 'express';
+import {Request, Response, NextFunction} from 'express';
 
-class HelloController{
-  public hello = (req:Request, res:Response, next:NextFunction) => {
-    try{
+class HelloController {
+  public hello = (req: Request, res: Response, next: NextFunction) => {
+    try {
       res.status(200).json({message: 'Hello'});
-    }catch(error){
+    } catch (error) {
       next(error);
     }
-  }
+  };
 }
-export default HelloController
+export default HelloController;

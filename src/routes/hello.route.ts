@@ -1,11 +1,11 @@
-import { Router } from "express";
-import HelloController from "../controller/hello.controller";
+import {Router} from 'express';
+import HelloController from '../controller/hello.controller';
 
-class Hello{
-  public path = '/'
+class Hello {
+  public path = '/';
   public router = Router();
   public helloController = new HelloController();
-  constructor(){
+  constructor() {
     this.router.get(this.path, this.helloController.hello);
   }
 }

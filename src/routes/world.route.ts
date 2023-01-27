@@ -1,11 +1,11 @@
-import { Router } from "express";
-import WorldController from "../controller/world.controller";
+import {Router} from 'express';
+import WorldController from '../controller/world.controller';
 
-class world{
-  public path = '/world'
+class world {
+  public path = '/world';
   public router = Router();
   public worldController = new WorldController();
-  constructor(){
+  constructor() {
     this.router.get(this.path, this.worldController.world);
   }
 }
