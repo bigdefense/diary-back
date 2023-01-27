@@ -1,0 +1,49 @@
+version: '3.7'
+
+services:
+  nginx:
+    build:
+      context: ./nginx
+    container_name: nginx
+    ports:
+      - '80:80'
+    networks:
+      - backend
+    depends_on:
+      - server
+    restart: 'unless-stopped'
+  server:
+    build:
+      context: ./diary-backend
+      dockerfile: Dockerfile
+    container_name: server
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    networks:
+      - backend
+    links:
+      - postgresql
+    depends_on:
+      - postgresql
+    restart: 'unless-stopped'
+  postgresql:
+    image: postgres
+    container_name: postgresql
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+    ports:
+      - '5432:5432'
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  data:
+    driver: local
