@@ -3,6 +3,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import hpp from 'hpp';
+import { Route } from './interface/route.interface';
 
 class App{
   public app: express.Application;
@@ -10,9 +11,10 @@ class App{
     this.middlewares();
     this.middlewares();
 
-  constructor(){
+  constructor(routes: Route[]){
     this.app = express();
     this.port = 3000;
+    this.routes(routes);
   }
 
   public async listen(){
@@ -31,6 +33,11 @@ class App{
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(cookieParser());
   } 
+
+  public routes(routes){
+    routes.map(route=>this.app.use('/',route.router))
+  }
+
   private errorHandlers(){
     this.app.use((req:Request, res:Response, next:NextFunction)=>{
       try{
