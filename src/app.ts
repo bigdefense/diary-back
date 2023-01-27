@@ -4,6 +4,8 @@ import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import hpp from 'hpp';
 import {Route} from './interface/route.interface';
+import morgan from 'morgan';
+import {logger, stream} from '@/utils/logger';
 
 class App {
   public app: express.Application;
@@ -19,14 +21,17 @@ class App {
 
   public async listen() {
     this.app.listen(this.port, () => {
-      console.log(`Server is listening on port ${this.port}`);
+      logger.info(`=========================================`);
+      logger.info(`Server is listening on port ${this.port}`);
+      logger.info(`=========================================`);
     });
   }
 
   private middlewares() {
     this.app.use(helmet({}));
     this.app.use(hpp({}));
-    this.app.use(cors({}));
+    this.app.use(morgan('dev', {stream}));
+    this.app.use(cors());
     this.app.use(express.json());
     this.app.use(express.urlencoded({extended: true}));
     this.app.use(cookieParser());
