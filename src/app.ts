@@ -8,19 +8,16 @@ import { Route } from './interface/route.interface';
 class App{
   public app: express.Application;
   public port: number;
-    this.middlewares();
-    this.middlewares();
 
   constructor(routes: Route[]){
     this.app = express();
     this.port = 3000;
+    this.middlewares();
     this.routes(routes);
+    this.errorHandlers();
   }
 
   public async listen(){
-    this.app.get('/', (req: Request, res: Response, next: NextFunction) => {
-      res.send('welcome!');
-    });
     this.app.listen(this.port, () => {
       console.log(`Server is listening on port ${this.port}`);
     });
