@@ -31,6 +31,16 @@ class App{
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(cookieParser());
   } 
+  private errorHandlers(){
+    this.app.use((req:Request, res:Response, next:NextFunction)=>{
+      try{
+        console.error(`${req.method} ${req.path} ${res.statusCode} ${res.statusMessage}`)
+        res.status(500).json({message: 'Something went wrong'});
+      }catch(error){
+        next(error);
+      }
+    })
+  }
 }
 
 export default App;
