@@ -6,6 +6,7 @@ import hpp from 'hpp';
 import {Route} from './interface/route.interface';
 import morgan from 'morgan';
 import {logger, stream} from '@/utils/logger';
+import models from './models/init-models';
 import session from './utils/session';
 
 class App {
@@ -41,7 +42,7 @@ class App {
   }
 
   private connectDatabase() {
-    initModels.sequelize.sync({force: false});
+    models.sequelize.sync({force: false});
   }
 
   public routes(routes: Route[]) {
