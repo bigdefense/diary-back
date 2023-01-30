@@ -1,14 +1,15 @@
 import session from 'express-session';
 import fileStore from 'session-file-store';
-import {sessionInterface} from '@/interface/session.interface';
-const FileStore = fileStore(session);
 
-export const sessionOptions: sessionInterface = {
+const FileStore = fileStore(session);
+const sessionOptions: session.SessionOptions = {
   secret: 'secret key', // 암호화
   resave: false,
   saveUninitialized: true,
   cookie: {
     httpOnly: true,
   },
-  store: FileStore,
+  store: new FileStore(),
 };
+
+export default session(sessionOptions);
