@@ -6,7 +6,7 @@ import hpp from 'hpp';
 import {Route} from './interface/route.interface';
 import morgan from 'morgan';
 import {logger, stream} from '@/utils/logger';
-import initModels from './models/init-models';
+import session from './utils/session';
 
 class App {
   public app: express.Application;
@@ -32,6 +32,7 @@ class App {
   private middlewares() {
     this.app.use(helmet({}));
     this.app.use(hpp({}));
+    this.app.use(session);
     this.app.use(morgan('dev', {stream}));
     this.app.use(cors());
     this.app.use(express.json());
