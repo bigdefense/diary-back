@@ -17,7 +17,7 @@ Posts.belongsTo(Pages, {as: 'pages', foreignKey: 'page_id'});
 Stickers.belongsTo(Pages, {as: 'pages', foreignKey: 'page_id'});
 Users.hasMany(Pages, {as: 'pages', foreignKey: 'user_id'});
 
-const initModels = {
+const models = {
   Users,
   Posts,
   Pages,
@@ -26,4 +26,4 @@ const initModels = {
   Sequelize,
 };
 
-export default initModels;
+export default models;
