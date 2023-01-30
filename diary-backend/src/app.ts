@@ -6,6 +6,7 @@ import hpp from 'hpp';
 import {Route} from './interface/route.interface';
 import morgan from 'morgan';
 import {logger, stream} from '@/utils/logger';
+import initModels from './models/init-models';
 
 class App {
   public app: express.Application;
@@ -14,6 +15,7 @@ class App {
   constructor(routes: Route[]) {
     this.app = express();
     this.port = 3000;
+    this.connectDatabase();
     this.middlewares();
     this.routes(routes);
     this.errorHandlers();
@@ -35,6 +37,10 @@ class App {
     this.app.use(express.json());
     this.app.use(express.urlencoded({extended: true}));
     this.app.use(cookieParser());
+  }
+
+  private connectDatabase() {
+    initModels.sequelize.sync({force: false});
   }
 
   public routes(routes: Route[]) {
