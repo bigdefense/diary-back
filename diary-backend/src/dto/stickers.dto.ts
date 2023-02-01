@@ -1,6 +1,6 @@
 import {IsString, Length, IsNumber, ArrayNotEmpty} from 'class-validator';
 
-export class createStickersDto {
+export class StickersDto {
   @IsNumber()
   public page_id!: number;
 

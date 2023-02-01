@@ -1,6 +1,6 @@
 import {ArrayNotEmpty, IsNumber} from 'class-validator';
 
-export class createPagesDto {
+export class PagesDto {
   @IsNumber()
   public user_id!: number;
 

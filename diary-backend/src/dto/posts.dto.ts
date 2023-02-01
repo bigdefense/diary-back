@@ -1,6 +1,6 @@
 import {IsString, IsDate, IsNumber} from 'class-validator';
 
-export class createPostsDto {
+export class PostsDto {
   @IsNumber()
   public page_id!: number;
 
