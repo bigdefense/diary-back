@@ -18,6 +18,19 @@ class UsersDao {
     return findUser;
   }
 
+  public async findUserByEmailPassword(
+    email: string,
+    password: string,
+  ): Promise<Users> {
+    if (isEmpty(email) || isEmpty(password))
+      throw new exceptError(400, `You didn't give userData`);
+    const findUser: Users | null = await this.users.findOne({
+      where: {email, password},
+    });
+    if (!findUser) throw new exceptError(400, `You are not user`);
+    return findUser;
+  }
+
   public async createUser(userData: UserDto): Promise<Users | void> {
     const transaction: Transaction = await sequelize.transaction();
     try {
