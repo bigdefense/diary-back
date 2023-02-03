@@ -5,6 +5,7 @@ import {Users} from '@/interface/users.interface';
 import exceptError from '@/utils/excetpError';
 import {logger} from '@/utils/logger';
 import {compare} from 'bcrypt';
+import {isEmpty} from 'class-validator';
 import {sign} from 'jsonwebtoken';
 
 export class UserService {
@@ -30,6 +31,19 @@ export class UserService {
     const cookie = this.createCookie(tokenData);
     return {cookie, findUser};
   };
+
+  public async userSignOut(email: string, password: string): Promise<Users> {
+    if (isEmpty(email) || isEmpty(password))
+      throw new exceptError(400, "You're not userData");
+
+    const findUser: Users = await this.user.findUserByEmailPassword(
+      email,
+      password,
+    );
+    if (!findUser) throw new exceptError(409, "You're not user");
+
+    return findUser;
+  }
 
   public userEmailDuplicate = async (email: string) => {
     try {
