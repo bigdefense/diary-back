@@ -2,6 +2,7 @@ import {Request, Response, NextFunction} from 'express';
 
 import {Users} from '@/interface/users.interface';
 import {UserService} from '@/service/users.service';
+import {RequestWithUser} from '@/interface/auth.interface';
 
 class UsersController {
   public userService = new UserService();
@@ -38,18 +39,18 @@ class UsersController {
   };
 
   public userSignOut = async (
-    req: Request,
+    req: RequestWithUser,
     res: Response,
     next: NextFunction,
   ) => {
     try {
-      const {email, password} = req.body;
-      const {cookie, findUser} = await this.userService.userSignIn(
+      const {email, password} = req.user;
+      const logOutUserData: Users = await this.userService.userSignOut(
         email,
         password,
       );
-      res.setHeader('Set-Cookie', [cookie]);
-      res.status(200).json({data: findUser, message: 'login'});
+      res.setHeader('Set-Cookie', ['Authorization=; Max-age=0']);
+      res.status(200).json({data: logOutUserData, message: 'logout'});
     } catch (error) {
       next(error);
     }
