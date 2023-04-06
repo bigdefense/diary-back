@@ -1,6 +1,9 @@
 export interface Stickers {
   id: number;
-  page_id: number;
+  user_id: number;
+  sticker_id: number;
+  page_type: string;
+  page_date: string;
   position: Array<number>;
   size: Array<number>;
   image: string;
