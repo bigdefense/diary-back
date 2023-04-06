@@ -20,9 +20,9 @@ class Users {
       this.usersController.userSignIn,
     );
     this.router.post(
-      `${this.path}/emaildup`,
+      `${this.path}/signout`,
       authMiddleware,
-      this.usersController.userEmailDup,
+      this.usersController.userSignOut,
     );
   }
 }
