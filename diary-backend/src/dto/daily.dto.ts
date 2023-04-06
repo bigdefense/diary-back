@@ -1,6 +1,6 @@
 import {IsDate, IsDateString, IsNumber, IsString} from 'class-validator';
 
-export class getDailyDto {
+export class GetDailyDto {
   @IsString()
   public title!: string;
 
@@ -11,7 +11,7 @@ export class getDailyDto {
   public date!: string;
 }
 
-export class createDailyDto {
+export class CreateDailyDto {
   @IsNumber()
   public user_id!: number;
 
