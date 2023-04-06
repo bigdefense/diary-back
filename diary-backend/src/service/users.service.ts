@@ -55,13 +55,13 @@ export class UserService {
     }
   };
   public createToken(user: Users): TokenData {
-    const dataStoredInToken: DataStoredInToken = {email: user.email};
+    const dataStoredInToken: DataStoredInToken = {id: user.id};
     const secretKey = 'tmp';
     const expiresIn: number = 60 * 60;
     return {expiresIn, token: sign(dataStoredInToken, secretKey, {expiresIn})};
   }
 
   public createCookie(tokenData: TokenData): string {
-    return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn};`;
+    return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn}; path=/`;
   }
 }
