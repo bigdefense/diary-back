@@ -1,14 +1,14 @@
 import {Sequelize, DataTypes, Model, Optional} from 'sequelize';
-import {WeeklyDairy} from '../interface/weeklyDairy.interface';
+import {WeeklyDiary} from '@/interface/weeklyDiary.interface';
 
-export type MonthlyDairyCreationAttributes = Optional<
-  WeeklyDairy,
+export type MonthlyDiaryCreationAttributes = Optional<
+  WeeklyDiary,
   'id' | 'user_id' | 'content' | 'date' | 'week_day_name'
 >;
 
 export class WeeklyDiaryModel
-  extends Model<WeeklyDairy, MonthlyDairyCreationAttributes>
-  implements WeeklyDairy
+  extends Model<WeeklyDiary, MonthlyDiaryCreationAttributes>
+  implements WeeklyDiary
 {
   public id!: number;
   public user_id!: number;
@@ -52,11 +52,11 @@ export default function (sequelize: Sequelize): typeof WeeklyDiaryModel {
       },
     },
     {
-      tableName: 'weekly_dairy',
+      tableName: 'weekly_diary',
       sequelize,
       indexes: [
         {
-          name: 'weekly_dairy_pkey',
+          name: 'weekly_diary_pkey',
           unique: true,
           fields: [{name: 'id'}],
         },

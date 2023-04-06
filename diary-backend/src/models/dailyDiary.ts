@@ -1,14 +1,14 @@
 import {Sequelize, DataTypes, Model, Optional} from 'sequelize';
-import {DailyDairy} from '../interface/dailyDairy.interface';
+import {DailyDiary} from '../interface/dailyDiary.interface';
 
-export type DailyDairyCreationAttributes = Optional<
-  DailyDairy,
+export type DailyDiaryCreationAttributes = Optional<
+  DailyDiary,
   'id' | 'user_id' | 'title' | 'content' | 'date'
 >;
 
 export class DailyDiaryModel
-  extends Model<DailyDairy, DailyDairyCreationAttributes>
-  implements DailyDairy
+  extends Model<DailyDiary, DailyDiaryCreationAttributes>
+  implements DailyDiary
 {
   public id!: number;
   public user_id!: number;
@@ -51,11 +51,11 @@ export default function (sequelize: Sequelize): typeof DailyDiaryModel {
       },
     },
     {
-      tableName: 'daily_dairy',
+      tableName: 'daily_diary',
       sequelize,
       indexes: [
         {
-          name: 'daily_dairy_pkey',
+          name: 'daily_diary_pkey',
           unique: true,
           fields: [{name: 'id'}],
         },

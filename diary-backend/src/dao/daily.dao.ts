@@ -1,5 +1,5 @@
-import {createDailyDto} from '@/dto/daily.dto';
-import {DailyDairy} from '@/interface/dailyDairy.interface';
+import {CreateDailyDto} from '@/dto/daily.dto';
+import {DailyDiary} from '@/interface/dailyDiary.interface';
 import models from '@/models/init-models';
 import {isEmpty} from 'class-validator';
 import {logger} from '@/utils/logger';
@@ -10,56 +10,55 @@ import exceptError from '@/utils/excetpError';
 class DailyDao {
   public dailys = models.DailyDiary;
 
-  public async findDailyDairyByDate(
+  public async findDailyDiaryByDate(
     date: string,
     user_id: number,
-  ): Promise<DailyDairy> {
+  ): Promise<DailyDiary | null> {
     if (isEmpty(date)) throw new exceptError(400, `You didn't give Daily Date`);
-    const findDailyDairy: DailyDairy | null = await this.dailys.findOne({
+    const findDailyDiary: DailyDiary | null = await this.dailys.findOne({
       where: {date, user_id},
     });
-    if (!findDailyDairy) throw new exceptError(400, `You are not user`);
-    return findDailyDairy;
+    return findDailyDiary;
   }
 
-  public async updateDailyDairyByDate(
-    dailyDate: createDailyDto,
+  public async updateDailyDiaryByDate(
+    dailyDate: CreateDailyDto,
   ): Promise<[number] | void> {
     const transaction: Transaction = await sequelize.transaction();
     try {
-      const findDailyDairy: DailyDairy | null = await this.dailys.findOne({
+      const findDailyDiary: DailyDiary | null = await this.dailys.findOne({
         where: {date: dailyDate.date},
       });
-      if (!findDailyDairy) throw new exceptError(400, `You are not user`);
-      const updateDailyDairy: [number] = await this.dailys.update(
+      if (!findDailyDiary) throw new exceptError(400, `You are not user`);
+      const updateDailyDiary: [number] = await this.dailys.update(
         {
           ...dailyDate,
         },
         {where: {date: dailyDate.date, user_id: dailyDate.user_id}},
       );
       await transaction.commit();
-      return updateDailyDairy;
+      return updateDailyDiary;
     } catch (e) {
       logger.error(e);
       await transaction.rollback();
     }
   }
 
-  public async deleteDailyDairyByDate(
+  public async deleteDailyDiaryByDate(
     date: string,
     user_id: number,
   ): Promise<number | void> {
     const transaction: Transaction = await sequelize.transaction();
     try {
-      const findDailyDairy: DailyDairy | null = await this.dailys.findOne({
+      const findDailyDiary: DailyDiary | null = await this.dailys.findOne({
         where: {date},
       });
-      if (!findDailyDairy) throw new exceptError(400, `You are not user`);
-      const deleteDailyDairy: number = await this.dailys.destroy({
+      if (!findDailyDiary) throw new exceptError(400, `You are not user`);
+      const deleteDailyDiary: number = await this.dailys.destroy({
         where: {date, user_id},
       });
       await transaction.commit();
-      return deleteDailyDairy;
+      return deleteDailyDiary;
     } catch (e) {
       logger.error(e);
       await transaction.rollback();
@@ -67,11 +66,11 @@ class DailyDao {
   }
 
   public async createDaily(
-    dailyData: createDailyDto,
-  ): Promise<DailyDairy | void> {
+    dailyData: CreateDailyDto,
+  ): Promise<DailyDiary | void> {
     const transaction: Transaction = await sequelize.transaction();
     try {
-      const createDailyData: DailyDairy = await this.dailys.create(
+      const createDailyData: DailyDiary = await this.dailys.create(
         {
           ...dailyData,
         },

@@ -1,6 +1,6 @@
 import DailyDao from '@/dao/daily.dao';
-import {createDailyDto} from '@/dto/daily.dto';
-import {DailyDairy} from '@/interface/dailyDairy.interface';
+import {CreateDailyDto} from '@/dto/daily.dto';
+import {DailyDiary} from '@/interface/dailyDiary.interface';
 import exceptError from '@/utils/excetpError';
 import {logger} from '@/utils/logger';
 import {isEmpty} from 'class-validator';
@@ -8,16 +8,16 @@ import {isEmpty} from 'class-validator';
 export class DailyService {
   public daily = new DailyDao();
 
-  public dailyWrite = async (dailyDairy: createDailyDto) => {
-    if (isEmpty(dailyDairy))
+  public dailyWrite = async (dailyDiary: CreateDailyDto) => {
+    if (isEmpty(dailyDiary))
       throw new exceptError(400, `You didn't give Daily info`);
     try {
-      const existDaily = await this.daily.findDailyDairyByDate(
-        dailyDairy.date,
-        dailyDairy.user_id,
+      const existDaily = await this.daily.findDailyDiaryByDate(
+        dailyDiary.date,
+        dailyDiary.user_id,
       );
       if (existDaily) return existDaily;
-      const createDailyData: any = await this.daily.createDaily(dailyDairy);
+      const createDailyData: any = await this.daily.createDaily(dailyDiary);
       return createDailyData;
     } catch (error) {
       logger.error(error);
@@ -28,21 +28,19 @@ export class DailyService {
     if (isEmpty(dailyDate))
       throw new exceptError(400, `You didn't give Daily info`);
     try {
-      const findDiary: DailyDairy = await this.daily.findDailyDairyByDate(
-        dailyDate,
-        user_id,
-      );
+      const findDiary: DailyDiary | null =
+        await this.daily.findDailyDiaryByDate(dailyDate, user_id);
       return findDiary;
     } catch (error) {
       logger.error(error);
     }
   };
-  public dailyUpdate = async (dailyDairy: createDailyDto) => {
-    if (isEmpty(dailyDairy))
+  public dailyUpdate = async (dailyDiary: CreateDailyDto) => {
+    if (isEmpty(dailyDiary))
       throw new exceptError(400, `You didn't give Daily info`);
     try {
-      const updateDailyData = await this.daily.updateDailyDairyByDate(
-        dailyDairy,
+      const updateDailyData = await this.daily.updateDailyDiaryByDate(
+        dailyDiary,
       );
       return updateDailyData;
     } catch (error) {
@@ -54,7 +52,7 @@ export class DailyService {
     if (isEmpty(dailyDate))
       throw new exceptError(400, `You didn't give Daily info`);
     try {
-      await this.daily.deleteDailyDairyByDate(dailyDate, user_id);
+      await this.daily.deleteDailyDiaryByDate(dailyDate, user_id);
     } catch (error) {
       logger.error(error);
     }

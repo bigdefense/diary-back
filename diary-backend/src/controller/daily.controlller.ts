@@ -1,6 +1,6 @@
 import {NextFunction, Request, Response} from 'express';
-import {getDailyDto, createDailyDto} from '@/dto/daily.dto';
-import {DailyDairy} from '@/interface/dailyDairy.interface';
+import {GetDailyDto, CreateDailyDto} from '@/dto/daily.dto';
+import {DailyDiary} from '@/interface/dailyDiary.interface';
 import {DailyService} from '@/service/daily.service';
 import {RequestWithUser} from '@/interface/auth.interface';
 
@@ -15,9 +15,9 @@ export class DailyController {
     try {
       const date = req.params.date;
       const user_id = Number(req.user.id);
-      const findDailyDairy = await this.daily.dailyRead(date, user_id);
+      const findDailyDiary = await this.daily.dailyRead(date, user_id);
 
-      res.status(200).json({data: findDailyDairy, message: 'findDiary'});
+      res.status(200).json({data: findDailyDiary, message: 'findDiary'});
     } catch (error) {
       next(error);
     }
@@ -29,12 +29,12 @@ export class DailyController {
     next: NextFunction,
   ) => {
     try {
-      const getDailyData: getDailyDto = req.body;
-      const createData: createDailyDto = {
+      const getDailyData: GetDailyDto = req.body;
+      const createData: CreateDailyDto = {
         user_id: Number(req.user.id),
         ...getDailyData,
       };
-      const createDailyData: DailyDairy = await this.daily.dailyWrite(
+      const createDailyData: DailyDiary = await this.daily.dailyWrite(
         createData,
       );
 
@@ -50,8 +50,8 @@ export class DailyController {
     next: NextFunction,
   ) => {
     try {
-      const getDailyData: getDailyDto = req.body;
-      const createDailyData: createDailyDto = {
+      const getDailyData: GetDailyDto = req.body;
+      const createDailyData: CreateDailyDto = {
         user_id: Number(req.user.id),
         ...getDailyData,
       };
