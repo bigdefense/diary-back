@@ -1,27 +1,33 @@
 import Sequelize from 'sequelize';
-import postsInitial from './posts';
-import pagesInitial from './pages';
 import stickersInitial from './stickers';
 import usersInitial from './users';
+import monthlyInitial from './monthlyDiary';
+import weeklyInitial from './weeklyDiary';
+import dailyInitial from './dailyDiary';
 import sequelize from '../database';
 
 const Users = usersInitial(sequelize);
-const Posts = postsInitial(sequelize);
-const Pages = pagesInitial(sequelize);
+const MonthlyDiary = monthlyInitial(sequelize);
+const DailyDiary = dailyInitial(sequelize);
+const WeeklyDiary = weeklyInitial(sequelize);
 const Stickers = stickersInitial(sequelize);
 
-Pages.hasMany(Posts, {as: 'posts', foreignKey: 'page_id'});
-Pages.hasMany(Stickers, {as: 'stickers', foreignKey: 'page_id'});
-Pages.belongsTo(Users, {as: 'users', foreignKey: 'user_id'});
-Posts.belongsTo(Pages, {as: 'pages', foreignKey: 'page_id'});
-Stickers.belongsTo(Pages, {as: 'pages', foreignKey: 'page_id'});
-Users.hasMany(Pages, {as: 'pages', foreignKey: 'user_id'});
+Users.hasMany(MonthlyDiary, {as: 'monthly_dairy', foreignKey: 'user_id'});
+Users.hasMany(WeeklyDiary, {as: 'weekly_dairy', foreignKey: 'user_id'});
+Users.hasMany(DailyDiary, {as: 'daily_dairy', foreignKey: 'user_id'});
+Users.hasMany(Stickers, {as: 'stickers', foreignKey: 'user_id'});
+
+Stickers.belongsTo(Users, {as: 'users', foreignKey: 'user_id'});
+MonthlyDiary.belongsTo(Users, {as: 'users', foreignKey: 'user_id'});
+WeeklyDiary.belongsTo(Users, {as: 'users', foreignKey: 'user_id'});
+DailyDiary.belongsTo(Users, {as: 'users', foreignKey: 'user_id'});
 
 const models = {
   Users,
-  Posts,
-  Pages,
   Stickers,
+  MonthlyDiary,
+  DailyDiary,
+  WeeklyDiary,
   sequelize,
   Sequelize,
 };

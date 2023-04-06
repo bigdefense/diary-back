@@ -3,7 +3,14 @@ import {Stickers} from '../interface/stickers.interface';
 
 export type StickersCreationAttributes = Optional<
   Stickers,
-  'id' | 'page_id' | 'position' | 'size' | 'image' | 'priority'
+  | 'id'
+  | 'user_id'
+  | 'sticker_id'
+  | 'page_id'
+  | 'position'
+  | 'size'
+  | 'image'
+  | 'priority'
 >;
 
 export class StickersModel
@@ -11,6 +18,8 @@ export class StickersModel
   implements Stickers
 {
   public id!: number;
+  public user_id!: number;
+  public sticker_id!: number;
   public page_id!: number;
   public position!: Array<number>;
   public size!: Array<number>;
@@ -31,13 +40,22 @@ export default function (sequelize: Sequelize): typeof StickersModel {
         allowNull: false,
         primaryKey: true,
       },
-      page_id: {
+      user_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        references: {
-          model: 'pages',
-          key: 'id',
-        },
+      },
+      sticker_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        unique: true,
+      },
+      page_type: {
+        type: DataTypes.STRING(30),
+        allowNull: false,
+      },
+      page_date: {
+        type: DataTypes.DATEONLY,
+        allowNull: false,
       },
       position: {
         type: DataTypes.ARRAY(DataTypes.INTEGER),

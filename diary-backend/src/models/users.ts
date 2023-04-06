@@ -31,12 +31,12 @@ export default function (sequelize: Sequelize): typeof UsersModel {
         primaryKey: true,
       },
       email: {
-        type: DataTypes.STRING(30),
+        type: DataTypes.STRING(60),
         allowNull: false,
         unique: 'users_email_key',
       },
       password: {
-        type: DataTypes.STRING(30),
+        type: DataTypes.STRING(100),
         allowNull: false,
       },
       name: {
