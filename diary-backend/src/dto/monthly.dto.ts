@@ -1,20 +1,31 @@
-import {IsDate, IsNumber, IsString} from 'class-validator';
+import {
+  IsArray,
+  IsDate,
+  IsDateString,
+  IsNumber,
+  IsString,
+} from 'class-validator';
 
-export class MonthlyDto {
-  @IsString()
-  public title!: string;
+export class GetMonthlyDto {
+  @IsArray()
+  public content!: Array<string>;
 
-  @IsString()
-  public content!: string;
-
-  @IsDate()
+  @IsDateString()
   public date!: string;
-
-  @IsNumber()
-  public priority!: number;
 }
 
-// export interface DailyDairy {
+export class CreateMonthlyDto {
+  @IsNumber()
+  public user_id!: number;
+
+  @IsArray()
+  public content!: Array<string>;
+
+  @IsDateString()
+  public date!: string;
+}
+
+// export interface DailyDiary {
 //   id: number;
 //   user_id: number;
 //   title: string;
