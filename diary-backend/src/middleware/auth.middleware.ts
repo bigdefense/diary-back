@@ -4,27 +4,29 @@ import {DataStoredInToken, RequestWithUser} from '@/interface/auth.interface';
 import models from '@/models/init-models';
 import exceptError from '@/utils/excetpError';
 
+const getAuthorization = req => {
+  const coockie = req.cookies['Authorization'];
+  if (coockie) return coockie;
+
+  const header = req.header('Authorization');
+  if (header) return header.split('Bearer ')[1];
+
+  return null;
+};
+
 const authMiddleware = async (
   req: RequestWithUser,
   res: Response,
   next: NextFunction,
 ) => {
   try {
-    const Authorization =
-      req.cookies['Authorization'] ||
-      (req.header('Authorization') !== undefined
-        ? req.header('Authorization')?.split('Bearer ')[1]
-        : null);
+    const Authorization = getAuthorization(req);
 
     if (Authorization) {
       const secretKey = 'tmp';
-      const verificationResponse = verify(
-        Authorization,
-        secretKey,
-      ) as DataStoredInToken;
-      const email = verificationResponse.email;
-      const findUser = await models.Users.findOne({where: {email}});
-
+      const {id} = verify(Authorization, secretKey) as DataStoredInToken;
+      const findUser = await models.Users.findOne({where: {id}});
+      console.log(id);
       if (findUser) {
         req.user = findUser;
         next();
