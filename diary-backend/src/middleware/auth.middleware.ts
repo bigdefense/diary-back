@@ -1,10 +1,10 @@
 import {NextFunction, Response} from 'express';
-import {verify} from 'jsonwebtoken';
-import {DataStoredInToken, RequestWithUser} from '@/interface/auth.interface';
-import models from '@/models/init-models';
-import exceptError from '@/utils/excetpError';
+import {verify, sign} from 'jsonwebtoken';
+import {DataStoredInToken, RequestWithUser} from '../interface/auth.interface';
+import models from '../models/init-models';
+import exceptError from '../utils/excetpError';
 
-const getAuthorization = req => {
+const getAuthorization = (req: RequestWithUser) => {
   const coockie = req.cookies['Authorization'];
   if (coockie) return coockie;
 
@@ -14,7 +14,7 @@ const getAuthorization = req => {
   return null;
 };
 
-const authMiddleware = async (
+export const authMiddleware = async (
   req: RequestWithUser,
   res: Response,
   next: NextFunction,
@@ -23,10 +23,9 @@ const authMiddleware = async (
     const Authorization = getAuthorization(req);
 
     if (Authorization) {
-      const secretKey = 'tmp';
+      const secretKey = 'secret';
       const {id} = verify(Authorization, secretKey) as DataStoredInToken;
       const findUser = await models.Users.findOne({where: {id}});
-      console.log(id);
       if (findUser) {
         req.user = findUser;
         next();
@@ -40,5 +39,3 @@ const authMiddleware = async (
     next(new exceptError(401, 'Wrong authentication token'));
   }
 };
-
-export default authMiddleware;

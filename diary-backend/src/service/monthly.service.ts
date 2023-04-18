@@ -1,8 +1,8 @@
-import MonthlyDao from '@/dao/monthly.dao';
-import {CreateMonthlyDto} from '@/dto/monthly.dto';
-import {MonthlyDiary} from '@/interface/monthlyDiary.interface';
-import exceptError from '@/utils/excetpError';
-import {logger} from '@/utils/logger';
+import MonthlyDao from '../dao/monthly.dao';
+import {CreateMonthlyDto} from '../dto/monthly.dto';
+import {MonthlyDiary} from '../interface/monthlyDiary.interface';
+import exceptError from '../utils/excetpError';
+import {logger} from '../utils/logger';
 import {isEmpty} from 'class-validator';
 
 export class MonthlyService {

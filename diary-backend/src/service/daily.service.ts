@@ -1,8 +1,8 @@
-import DailyDao from '@/dao/daily.dao';
-import {CreateDailyDto} from '@/dto/daily.dto';
-import {DailyDiary} from '@/interface/dailyDiary.interface';
-import exceptError from '@/utils/excetpError';
-import {logger} from '@/utils/logger';
+import DailyDao from '../dao/daily.dao';
+import {CreateDailyDto} from '../dto/daily.dto';
+import {DailyDiary} from '../interface/dailyDiary.interface';
+import exceptError from '../utils/excetpError';
+import {logger} from '../utils/logger';
 import {isEmpty} from 'class-validator';
 
 export class DailyService {

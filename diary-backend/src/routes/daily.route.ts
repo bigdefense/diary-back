@@ -1,8 +1,8 @@
 import {Router} from 'express';
-import validationMiddleware from '@/middleware/validation.middleware';
-import {GetDailyDto} from '@/dto/daily.dto';
-import {DailyController} from '@/controller/daily.controlller';
-import authMiddleware from '@/middleware/auth.middleware';
+import validationMiddleware from '../middleware/validation.middleware';
+import {GetDailyDto} from '../dto/daily.dto';
+import {DailyController} from '../controller/daily.controlller';
+import {authMiddleware} from '../middleware/auth.middleware';
 
 class Daily {
   public path = '/daily';
@@ -12,7 +12,7 @@ class Daily {
     this.router.get(
       `${this.path}/read/:date`,
       authMiddleware,
-      validationMiddleware(GetDailyDto, 'body'),
+      // validationMiddleware(GetDailyDto, 'body'),
       this.usersController.getDaily,
     );
     this.router.post(

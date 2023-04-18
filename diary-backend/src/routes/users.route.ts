@@ -1,8 +1,8 @@
 import {Router} from 'express';
-import UsersController from '@/controller/users.controller';
-import validationMiddleware from '@/middleware/validation.middleware';
-import {UserDto} from '@/dto/users.dto';
-import authMiddleware from '@/middleware/auth.middleware';
+import UsersController from '../controller/users.controller';
+import validationMiddleware from '../middleware/validation.middleware';
+import {UserDto} from '../dto/users.dto';
+import {authMiddleware} from '../middleware/auth.middleware';
 
 class Users {
   public path = '/users';

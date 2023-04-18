@@ -1,8 +1,8 @@
 import {Router} from 'express';
-import validationMiddleware from '@/middleware/validation.middleware';
-import {GetMonthlyDto} from '@/dto/monthly.dto';
-import {MonthlyController} from '@/controller/monthly.controlller';
-import authMiddleware from '@/middleware/auth.middleware';
+import validationMiddleware from '../middleware/validation.middleware';
+import {GetMonthlyDto} from '../dto/monthly.dto';
+import {MonthlyController} from '../controller/monthly.controlller';
+import {authMiddleware} from '../middleware/auth.middleware';
 
 class Monthly {
   public path = '/monthly';

@@ -1,5 +1,5 @@
 import {Sequelize, DataTypes, Model, Optional} from 'sequelize';
-import {WeeklyDiary} from '@/interface/weeklyDiary.interface';
+import {WeeklyDiary} from '../interface/weeklyDiary.interface';
 
 export type MonthlyDiaryCreationAttributes = Optional<
   WeeklyDiary,

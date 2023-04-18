@@ -1,8 +1,8 @@
 import {NextFunction, Request, Response} from 'express';
-import {GetMonthlyDto, CreateMonthlyDto} from '@/dto/monthly.dto';
-import {MonthlyDiary} from '@/interface/monthlyDiary.interface';
-import {MonthlyService} from '@/service/monthly.service';
-import {RequestWithUser} from '@/interface/auth.interface';
+import {GetMonthlyDto, CreateMonthlyDto} from '../dto/monthly.dto';
+import {MonthlyDiary} from '../interface/monthlyDiary.interface';
+import {MonthlyService} from '../service/monthly.service';
+import {RequestWithUser} from '../interface/auth.interface';
 
 export class MonthlyController {
   public Monthly = new MonthlyService();

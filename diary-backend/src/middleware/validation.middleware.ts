@@ -1,4 +1,4 @@
-import exceptError from '@/utils/excetpError';
+import exceptError from '../utils/excetpError';
 import {plainToInstance} from 'class-transformer';
 import {validate, ValidationError} from 'class-validator';
 import {RequestHandler, Response, NextFunction} from 'express';

@@ -1,8 +1,8 @@
 import {NextFunction, Request, Response} from 'express';
-import {GetDailyDto, CreateDailyDto} from '@/dto/daily.dto';
-import {DailyDiary} from '@/interface/dailyDiary.interface';
-import {DailyService} from '@/service/daily.service';
-import {RequestWithUser} from '@/interface/auth.interface';
+import {GetDailyDto, CreateDailyDto} from '../dto/daily.dto';
+import {DailyDiary} from '../interface/dailyDiary.interface';
+import {DailyService} from '../service/daily.service';
+import {RequestWithUser} from '../interface/auth.interface';
 
 export class DailyController {
   public daily = new DailyService();

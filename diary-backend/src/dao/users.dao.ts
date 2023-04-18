@@ -1,12 +1,12 @@
 import {hash} from 'bcrypt';
-import {UserDto} from '@/dto/users.dto';
-import {Users} from '@/interface/users.interface';
-import models from '@/models/init-models';
+import {UserDto} from '../dto/users.dto';
+import {Users} from '../interface/users.interface';
+import models from '../models/init-models';
 import {isEmpty} from 'class-validator';
-import {logger} from '@/utils/logger';
-import sequelize from '@/database';
+import {logger} from '../utils/logger';
+import sequelize from '../database';
 import {Transaction} from 'sequelize';
-import exceptError from '@/utils/excetpError';
+import exceptError from '../utils/excetpError';
 
 class UsersDao {
   public users = models.Users;
