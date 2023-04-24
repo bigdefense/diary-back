@@ -1,11 +1,25 @@
 import {Request, Response, NextFunction} from 'express';
 
-import {Users} from '@/interface/users.interface';
-import {UserService} from '@/service/users.service';
-import {RequestWithUser} from '@/interface/auth.interface';
+import {Users} from '../interface/users.interface';
+import {UserService} from '../service/users.service';
+import {RequestWithUser} from '../interface/auth.interface';
 
 class UsersController {
   public userService = new UserService();
+
+  public userPorfile = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const {name, email, image} = req.user;
+      res.status(200).json({user: {name, email, image}, message: 'profile'});
+    } catch (error) {
+      next(error);
+    }
+  };
+
   // 회원가입
   public userSignUp = async (
     req: Request,
@@ -29,10 +43,33 @@ class UsersController {
   ) => {
     try {
       const {email, password} = req.body;
-      const {cookie, findUser}: {cookie: string; findUser: Users} =
+      const {
+        accessToken,
+        refreshToken,
+        findUser,
+      }: {refreshToken: string; accessToken: string; findUser: Users} =
         await this.userService.userSignIn(email, password);
-      res.setHeader('Set-Cookie', [cookie]);
-      res.status(200).json({data: findUser, message: 'login'});
+      res.cookie('Authorization', accessToken, {
+        domain: '.mydiary.site',
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true,
+      });
+
+      res.cookie('Refresh', refreshToken, {
+        domain: '.mydiary.site',
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true,
+      });
+      res.setHeader(
+        'Access-Control-Allow-Methods',
+        'GET, POST, OPTIONS, PUT, PATCH, DELETE',
+      );
+      res.setHeader('Access-Control-Allow-Credentials', 'true');
+      res
+        .status(200)
+        .json({data: {findUser, accessToken, refreshToken}, message: 'login'});
     } catch (error) {
       next(error);
     }
@@ -49,7 +86,12 @@ class UsersController {
         email,
         password,
       );
-      res.setHeader('Set-Cookie', ['Authorization=; Max-age=0']);
+      res.clearCookie('Authorization');
+      res.clearCookie('Refresh');
+      res.setHeader(
+        'Access-Control-Allow-Methods',
+        'GET, POST, OPTIONS, PUT, PATCH, DELETE',
+      );
       res.status(200).json({data: logOutUserData, message: 'logout'});
     } catch (error) {
       next(error);
@@ -70,5 +112,26 @@ class UsersController {
       next(error);
     }
   };
+  // public userRefresh = async (
+  //   req: RequestWithUser,
+  //   res: Response,
+  //   next: NextFunction,
+  // ) => {
+  //   try {
+  //     const {email, password} = req.user;
+  //     const logOutUserData: Users = await this.userService.userSignOut(
+  //       email,
+  //       password,
+  //     );
+  //     res.setHeader('Set-Cookie', ['refresh=; Max-age=0']);
+  //     res.setHeader(
+  //       'Access-Control-Allow-Methods',
+  //       'GET, POST, OPTIONS, PUT, PATCH, DELETE',
+  //     );
+  //     res.status(200).json({data: logOutUserData, message: 'logout'});
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // };
 }
 export default UsersController;
