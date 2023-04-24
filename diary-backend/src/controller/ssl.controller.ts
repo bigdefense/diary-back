@@ -6,7 +6,7 @@ class sslController {
       res
         .status(200)
         .sendFile(
-          process.cwd() + '/config/59F4AC7AC34FB82BC5CCE78D79BBA4F6.txt',
+          process.cwd() + '/config/FEB1092FBA22840526B86DE33A14908D.txt',
         );
     } catch (error) {
       next(error);

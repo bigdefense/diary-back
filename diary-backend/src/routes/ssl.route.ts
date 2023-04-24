@@ -1,7 +1,7 @@
 import {Router} from 'express';
 import sslController from '../controller/ssl.controller';
 
-const fileName = '59F4AC7AC34FB82BC5CCE78D79BBA4F6.txt';
+const fileName = 'FEB1092FBA22840526B86DE33A14908D.txt';
 class SSL {
   public path = '/.well-known';
   public router = Router();
