@@ -1,9 +1,8 @@
-import UsersDao from '@/dao/users.dao';
-import {UserDto} from '@/dto/users.dto';
-import {DataStoredInToken, TokenData} from '@/interface/auth.interface';
-import {Users} from '@/interface/users.interface';
-import exceptError from '@/utils/excetpError';
-import {logger} from '@/utils/logger';
+import UsersDao from '../dao/users.dao';
+import {DataStoredInToken, TokenData} from '../interface/auth.interface';
+import {Users} from '../interface/users.interface';
+import exceptError from '../utils/excetpError';
+import {logger} from '../utils/logger';
 import {compare} from 'bcrypt';
 import {isEmpty} from 'class-validator';
 import {sign} from 'jsonwebtoken';
@@ -27,9 +26,9 @@ export class UserService {
     const match = await compare(password, findUser.password);
     if (!match) throw new exceptError(409, "You're password not matching");
     if (!match) logger.info("You're not user");
-    const tokenData = this.createToken(findUser);
-    const cookie = this.createCookie(tokenData);
-    return {cookie, findUser};
+    const {accessToken, refreshToken} = this.createToken(findUser);
+    await this.user.refreshTokenSet(email, findUser.password, refreshToken);
+    return {accessToken, refreshToken, findUser};
   };
 
   public async userSignOut(email: string, password: string): Promise<Users> {
@@ -56,12 +55,10 @@ export class UserService {
   };
   public createToken(user: Users): TokenData {
     const dataStoredInToken: DataStoredInToken = {id: user.id};
-    const secretKey = 'tmp';
-    const expiresIn: number = 60 * 60;
-    return {expiresIn, token: sign(dataStoredInToken, secretKey, {expiresIn})};
-  }
-
-  public createCookie(tokenData: TokenData): string {
-    return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn}; path=/`;
+    const tokens = {
+      accessToken: sign({data: dataStoredInToken}, 'secret', {expiresIn: '1s'}),
+      refreshToken: sign({}, 'secret', {expiresIn: '1d'}),
+    };
+    return tokens;
   }
 }

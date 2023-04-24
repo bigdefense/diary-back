@@ -5,4 +5,5 @@ export interface Users {
   name: string;
   image: string;
   image_type: string;
+  refresh: string;
 }

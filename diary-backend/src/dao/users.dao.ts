@@ -49,6 +49,26 @@ class UsersDao {
       await transaction.rollback();
     }
   }
+  public async refreshTokenSet(
+    email: string,
+    password: string,
+    refreshStr: string,
+  ): Promise<[number] | void> {
+    const transaction: Transaction = await sequelize.transaction();
+    try {
+      const refreshSet: [number] = await this.users.update(
+        {
+          refresh: refreshStr,
+        },
+        {where: {email: email, password: password}},
+      );
+      await transaction.commit();
+    } catch (e) {
+      logger.error(e);
+      await transaction.rollback();
+      throw new exceptError(400, 'refreshTokenSet error');
+    }
+  }
 }
 
 export default UsersDao;

@@ -1,13 +1,19 @@
 import {Request} from 'express';
-import {Users} from '@/interface/users.interface';
+import {Users} from '../interface/users.interface';
 
 export interface DataStoredInToken {
   id: number;
 }
 
+export interface JwtToken {
+  data: {id: number};
+  iat: number;
+  exp: number;
+}
+
 export interface TokenData {
-  token: string;
-  expiresIn: number;
+  accessToken: string;
+  refreshToken: string;
 }
 
 export interface RequestWithUser extends Request {

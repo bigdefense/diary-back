@@ -3,7 +3,7 @@ import {Users} from '../interface/users.interface';
 
 export type UsersCreationAttributes = Optional<
   Users,
-  'id' | 'email' | 'password' | 'name' | 'image' | 'image_type'
+  'id' | 'email' | 'password' | 'name' | 'image' | 'image_type' | 'refresh'
 >;
 
 export class UsersModel
@@ -16,6 +16,7 @@ export class UsersModel
   public name!: string;
   public image!: string;
   public image_type!: string;
+  public refresh!: string;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -49,6 +50,10 @@ export default function (sequelize: Sequelize): typeof UsersModel {
       },
       image_type: {
         type: DataTypes.STRING(4),
+        allowNull: true,
+      },
+      refresh: {
+        type: DataTypes.STRING(200),
         allowNull: true,
       },
     },
