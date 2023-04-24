@@ -9,6 +9,12 @@ class Users {
   public router = Router();
   public usersController = new UsersController();
   constructor() {
+    this.router.get(
+      `${this.path}/profile`,
+      authMiddleware,
+      validationMiddleware(UserDto, 'body'),
+      this.usersController.userPorfile,
+    );
     this.router.post(
       `${this.path}/signup`,
       validationMiddleware(UserDto, 'body'),
