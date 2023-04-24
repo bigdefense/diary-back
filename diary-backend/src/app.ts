@@ -5,7 +5,7 @@ import helmet from 'helmet';
 import hpp from 'hpp';
 import {Route} from './interface/route.interface';
 import morgan from 'morgan';
-import {logger, stream} from '@/utils/logger';
+import {logger, stream} from './utils/logger';
 import models from './models/init-models';
 import session from './utils/session';
 
@@ -31,11 +31,17 @@ class App {
   }
 
   private middlewares() {
+    this.app.use(
+      cors({
+        origin: true,
+        credentials: true,
+      }),
+    );
+    this.app.use(cookieParser());
     this.app.use(helmet({}));
     this.app.use(hpp({}));
     this.app.use(session);
     this.app.use(morgan('dev', {stream}));
-    this.app.use(cors());
     this.app.use(express.json());
     this.app.use(express.urlencoded({extended: true}));
     this.app.use(cookieParser());
