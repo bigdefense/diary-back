@@ -3,7 +3,7 @@ import winstonDaily from 'winston-daily-rotate-file';
 import {join} from 'path';
 
 const {combine, timestamp, printf, colorize, splat} = winston.format;
-const logDir: string = join(__dirname, '../../logs');
+const logDir: string = join(__dirname, '../../.pm2logs');
 
 const loggerFormat = () => {
   return combine(
