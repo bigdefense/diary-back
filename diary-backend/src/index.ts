@@ -4,6 +4,7 @@ import Users from './routes/users.route';
 import World from './routes/world.route';
 import Daily from './routes/daily.route';
 import Monthly from './routes/monthly.route';
+import Sticker from './routes/sticker.route';
 
 const app = new App([
   new Monthly(),
@@ -11,6 +12,7 @@ const app = new App([
   new SSL(),
   new World(),
   new Users(),
+  new Sticker(),
 ]);
 
 app.listen();

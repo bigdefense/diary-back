@@ -1,8 +1,14 @@
-import {IsString, Length, IsNumber, ArrayNotEmpty} from 'class-validator';
+import {
+  IsString,
+  IsNumber,
+  ArrayNotEmpty,
+  IsUUID,
+  IsArray,
+} from 'class-validator';
 
 export class GetStickersDto {
-  @IsNumber()
-  public sticker_id!: number;
+  @IsUUID()
+  public id!: number;
 
   @IsString()
   public page_type!: string;
@@ -16,19 +22,40 @@ export class GetStickersDto {
   @ArrayNotEmpty()
   public size!: Array<number>;
 
-  @IsString()
   public image!: string;
 
-  @Length(0, 4)
-  public image_type!: string;
+  @IsString()
+  public image_name!: string;
 }
 
-export class CreateGetStickersDto {
+export class CreateStickersDto {
+  @IsUUID()
+  public id!: number;
+
   @IsNumber()
   public user_id!: number;
 
-  @IsNumber()
-  public sticker_id!: number;
+  @IsString()
+  public page_type!: string;
+
+  @IsString()
+  public page_date!: string;
+
+  @ArrayNotEmpty()
+  public position!: Array<number>;
+
+  @ArrayNotEmpty()
+  public size!: Array<number>;
+
+  public image!: string;
+
+  @IsString()
+  public image_name!: string;
+}
+
+export class updateStickersDto {
+  @IsUUID()
+  public id!: number;
 
   @IsString()
   public page_type!: string;
@@ -42,9 +69,8 @@ export class CreateGetStickersDto {
   @ArrayNotEmpty()
   public size!: Array<number>;
 
-  @IsString()
   public image!: string;
 
-  @Length(0, 4)
-  public image_type!: string;
+  @IsString()
+  public image_name!: string;
 }

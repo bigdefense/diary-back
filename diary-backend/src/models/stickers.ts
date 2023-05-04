@@ -5,12 +5,12 @@ export type StickersCreationAttributes = Optional<
   Stickers,
   | 'id'
   | 'user_id'
-  | 'sticker_id'
-  | 'page_id'
+  | 'page_type'
+  | 'page_date'
   | 'position'
   | 'size'
   | 'image'
-  | 'priority'
+  | 'image_name'
 >;
 
 export class StickersModel
@@ -19,13 +19,12 @@ export class StickersModel
 {
   public id!: number;
   public user_id!: number;
-  public sticker_id!: number;
-  public page_id!: number;
+  public page_type!: string;
+  public page_date!: string;
   public position!: Array<number>;
   public size!: Array<number>;
   public image!: string;
-  public image_type!: string;
-  public priority!: number;
+  public image_name!: string;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -35,19 +34,13 @@ export default function (sequelize: Sequelize): typeof StickersModel {
   StickersModel.init(
     {
       id: {
-        autoIncrement: true,
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
         allowNull: false,
         primaryKey: true,
       },
       user_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
-      },
-      sticker_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        unique: true,
       },
       page_type: {
         type: DataTypes.STRING(30),
@@ -66,15 +59,11 @@ export default function (sequelize: Sequelize): typeof StickersModel {
         allowNull: false,
       },
       image: {
-        type: DataTypes.BLOB,
+        type: DataTypes.STRING(300),
         allowNull: true,
       },
-      image_type: {
-        type: DataTypes.STRING(4),
-        allowNull: true,
-      },
-      priority: {
-        type: DataTypes.INTEGER,
+      image_name: {
+        type: DataTypes.STRING(60),
         allowNull: true,
       },
     },
