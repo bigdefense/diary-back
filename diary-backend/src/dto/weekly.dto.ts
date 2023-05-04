@@ -1,20 +1,15 @@
-import {IsDate, IsNumber, IsString} from 'class-validator';
+import {IsDate, IsDateString, IsNumber, IsString} from 'class-validator';
 
-export class weeklyDto {
+export class GetWeeklyDto {
   @IsString()
   public content!: string;
 
-  @IsDate()
+  @IsDateString()
   public date!: string;
-
-  @IsNumber()
-  public week_day_name!: number;
 }
 
-// export interface DailyDairy {
-//   id: number;
-//   user_id: number;
-//   title: string;
-//   content: string;
-//   date: string;
-// }
+export interface CreateWeeklyDto {
+  user_id: number;
+  content: string;
+  date: string;
+}
