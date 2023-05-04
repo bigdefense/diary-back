@@ -60,6 +60,7 @@ class MonthlyDao {
             date: monthlyDiaryData.date,
             user_id: monthlyDiaryData.user_id,
           },
+          transaction,
         },
       );
       await transaction.commit();
@@ -84,6 +85,7 @@ class MonthlyDao {
       if (!findMonthlyDiary) throw new exceptError(400, `You are not user`);
       const deleteMonthlyDiary: number = await this.monthlys.destroy({
         where: {date, user_id},
+        transaction,
       });
       await transaction.commit();
       return deleteMonthlyDiary;
