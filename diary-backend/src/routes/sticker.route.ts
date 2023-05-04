@@ -21,7 +21,7 @@ class Sticker {
       this.stickersController.getSticker,
     );
     this.router.post(
-      `${this.path}/create`,
+      `${this.path}/write`,
       this.upload.single('image'),
       authMiddleware,
       validationMiddleware(GetStickersDto, 'body'),
