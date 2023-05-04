@@ -54,6 +54,7 @@ class UsersController {
         httpOnly: true,
         sameSite: 'none',
         secure: true,
+        maxAge: 1000 * 60 * 60 * 2,
       });
 
       res.cookie('Refresh', refreshToken, {
@@ -61,6 +62,7 @@ class UsersController {
         httpOnly: true,
         sameSite: 'none',
         secure: true,
+        maxAge: 1000 * 60 * 60 * 24,
       });
       res.setHeader(
         'Access-Control-Allow-Methods',
