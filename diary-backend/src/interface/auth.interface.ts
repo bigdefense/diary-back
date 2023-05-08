@@ -1,6 +1,5 @@
 import {Request} from 'express';
 import {Users} from '../interface/users.interface';
-
 export interface DataStoredInToken {
   id: number;
 }
@@ -18,4 +17,8 @@ export interface TokenData {
 
 export interface RequestWithUser extends Request {
   user: Users;
+}
+
+export interface RequestWithFile extends RequestWithUser {
+  file: Express.Multer.File & Express.MulterS3.File;
 }
