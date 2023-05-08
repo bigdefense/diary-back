@@ -29,8 +29,8 @@ class UsersController {
   ) => {
     try {
       const user: Users = req.body;
-      const result = await this.userService.userSignUp(user);
-      res.status(201).json({result, message: 'signup'});
+      const {msg, code} = await this.userService.userSignUp(user);
+      res.status(code).json({msg, code});
     } catch (error) {
       next(error);
     }
@@ -72,7 +72,7 @@ class UsersController {
         'GET, POST, OPTIONS, PUT, PATCH, DELETE',
       );
       res.setHeader('Access-Control-Allow-Credentials', 'true');
-      res.status(200).json({msg, code, result});
+      res.status(code).json({msg, code, result});
     } catch (error) {
       next(error);
     }
@@ -86,8 +86,8 @@ class UsersController {
     try {
       const {email, password} = req.user;
       await this.userService.userSignOut(email, password);
-      res.clearCookie('Authorization');
-      res.clearCookie('Refresh');
+      res.clearCookie('Authorization', {domain: '.mydiary.site'});
+      res.clearCookie('Refresh', {domain: '.mydiary.site'});
       res.setHeader(
         'Access-Control-Allow-Methods',
         'GET, POST, OPTIONS, PUT, PATCH, DELETE',

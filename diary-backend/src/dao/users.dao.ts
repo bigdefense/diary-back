@@ -11,12 +11,11 @@ import exceptError from '../utils/excetpError';
 class UsersDao {
   public users = models.Users;
 
-  public async findUserByEmail(email: string): Promise<Users | string> {
+  public async findUserByEmail(email: string): Promise<Users | null> {
     try {
       if (isEmpty(email))
         throw new exceptError(400, `You didn't give userEmail`);
       const findUser: Users | null = await this.users.findOne({where: {email}});
-      if (!findUser) return '유저가 존재하지 않습니다.';
       return findUser;
     } catch (e) {
       logger.error(e);

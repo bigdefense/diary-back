@@ -13,7 +13,7 @@ export class UserService {
   public userSignUp = async (user: Users) => {
     try {
       const isDup = await this.userEmailDuplicate(user.email);
-      if (isDup) return {msg: '이미 존재하는 이메일입니다.', code: 203};
+      if (isDup?.result) return isDup;
       const createUser = this.user.createUser(user);
       if (!createUser) return {msg: '회원가입에 실패했습니다.', code: 203};
       return {msg: '회원가입에 성공했습니다.', code: 200};
@@ -25,12 +25,12 @@ export class UserService {
 
   public userSignIn = async (email: string, password: string) => {
     try {
-      const findUser: Users | string = await this.user.findUserByEmail(email);
-      if (typeof findUser === 'string')
-        return {msg: findUser, code: 203, result: {}};
+      const isDup = await this.userEmailDuplicate(email);
+      if (!isDup?.result)
+        throw new exceptError(409, '해당 이메일로 가입된 유저가 없습니다');
+      const findUser: Users = isDup.result;
       const match = await compare(password, findUser.password);
-      if (!match)
-        return {msg: '비밀번호가 일치하지 않습니다.', code: 203, result: {}};
+      if (!match) throw new exceptError(409, '비밀번호가 일치하지 않습니다');
       const {accessToken, refreshToken} = this.createToken(findUser);
       await this.user.refreshTokenSet(email, findUser.password, refreshToken);
       return {
@@ -58,13 +58,13 @@ export class UserService {
 
   public userEmailDuplicate = async (email: string) => {
     try {
-      const findUser: Users = await this.user.findUserByEmail(email);
-      if (findUser) {
-        logger.info(`${409}, you're email ${email} already exists`);
-      }
-      return findUser ? findUser : {};
+      const result: Users | null = await this.user.findUserByEmail(email);
+      if (result)
+        return {code: 200, msg: '해당 이메일로 가입된 유저가 있습니다', result};
+      return {code: 200, msg: '해당 이메일로 가입된 유저는 없습니다', result};
     } catch (error) {
       logger.error(error);
+      throw new exceptError(409, `userEmailDuplicate error MSG:${error}`);
     }
   };
   public createToken(user: Users): {accessToken: string; refreshToken: string} {
