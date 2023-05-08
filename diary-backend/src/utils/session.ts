@@ -7,7 +7,11 @@ const sessionOptions: session.SessionOptions = {
   resave: false,
   saveUninitialized: true,
   cookie: {
+    path: '/',
+    sameSite: 'none',
     httpOnly: true,
+    secure: true,
+    maxAge: 3600000,
   },
   store: new FileStore(),
 };
