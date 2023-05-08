@@ -14,7 +14,7 @@ export class UserService {
     try {
       const isDup = await this.userEmailDuplicate(user.email);
       if (isDup?.result) return isDup;
-      const createUser = this.user.createUser(user);
+      const createUser = await this.user.createUser(user);
       if (!createUser)
         return {msg: '회원가입에 실패했습니다.', code: 'USI10002'};
       return {msg: '회원가입에 성공했습니다.', code: 'USI10001'};
