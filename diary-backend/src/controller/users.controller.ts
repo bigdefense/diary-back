@@ -2,7 +2,7 @@ import {Request, Response, NextFunction} from 'express';
 
 import {Users} from '../interface/users.interface';
 import {UserService} from '../service/users.service';
-import {RequestWithUser} from '../interface/auth.interface';
+import {RequestWithUser, TokenData} from '../interface/auth.interface';
 
 class UsersController {
   public userService = new UserService();
@@ -44,12 +44,14 @@ class UsersController {
     try {
       const {email, password} = req.body;
       const {
-        accessToken,
-        refreshToken,
-        findUser,
-      }: {refreshToken: string; accessToken: string; findUser: Users} =
+        msg,
+        code,
+        result,
+      }: {msg: string; code: number; result?: TokenData} =
         await this.userService.userSignIn(email, password);
-      res.cookie('Authorization', accessToken, {
+      if (!result) res.status(203).json({msg, code, result});
+
+      res.cookie('Authorization', result.accessToken, {
         domain: '.mydiary.site',
         httpOnly: true,
         sameSite: 'none',
@@ -57,7 +59,7 @@ class UsersController {
         maxAge: 1000 * 60 * 60 * 2,
       });
 
-      res.cookie('Refresh', refreshToken, {
+      res.cookie('Refresh', result.refreshToken, {
         domain: '.mydiary.site',
         httpOnly: true,
         sameSite: 'none',
@@ -69,9 +71,7 @@ class UsersController {
         'GET, POST, OPTIONS, PUT, PATCH, DELETE',
       );
       res.setHeader('Access-Control-Allow-Credentials', 'true');
-      res
-        .status(200)
-        .json({data: {findUser, accessToken, refreshToken}, message: 'login'});
+      res.status(200).json({msg, code, result});
     } catch (error) {
       next(error);
     }

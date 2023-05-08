@@ -11,8 +11,8 @@ export interface JwtToken {
 }
 
 export interface TokenData {
-  accessToken: string;
-  refreshToken: string;
+  accessToken?: string;
+  refreshToken?: string;
 }
 
 export interface RequestWithUser extends Request {

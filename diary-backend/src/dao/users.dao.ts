@@ -11,11 +11,17 @@ import exceptError from '../utils/excetpError';
 class UsersDao {
   public users = models.Users;
 
-  public async findUserByEmail(email: string): Promise<Users> {
-    if (isEmpty(email)) throw new exceptError(400, `You didn't give userEmail`);
-    const findUser: Users | null = await this.users.findOne({where: {email}});
-    if (!findUser) throw new exceptError(400, `You are not user`);
-    return findUser;
+  public async findUserByEmail(email: string): Promise<Users | string> {
+    try {
+      if (isEmpty(email))
+        throw new exceptError(400, `You didn't give userEmail`);
+      const findUser: Users | null = await this.users.findOne({where: {email}});
+      if (!findUser) return '유저가 존재하지 않습니다.';
+      return findUser;
+    } catch (e) {
+      logger.error(e);
+      throw new exceptError(400, `findUserByEmail error ${e}`);
+    }
   }
 
   public async findUserByEmailPassword(
@@ -57,7 +63,7 @@ class UsersDao {
   ): Promise<[number] | void> {
     const transaction: Transaction = await sequelize.transaction();
     try {
-      const refreshSet: [number] = await this.users.update(
+      await this.users.update(
         {
           refresh: refreshStr,
         },
@@ -67,7 +73,7 @@ class UsersDao {
     } catch (e) {
       logger.error(e);
       await transaction.rollback();
-      throw new exceptError(400, 'refreshTokenSet error');
+      throw new exceptError(400, 'refreshTokenSet error MSG: ${e}');
     }
   }
 }
