@@ -30,7 +30,7 @@ class UsersController {
     try {
       const user: Users = req.body;
       const {msg, code} = await this.userService.userSignUp(user);
-      res.status(code).json({msg, code});
+      res.status(200).json({msg, code});
     } catch (error) {
       next(error);
     }
@@ -48,31 +48,33 @@ class UsersController {
         msg,
         code,
         result,
-      }: {msg: string; code: number; result?: TokenData} =
+      }: {msg: string; code: string; result: TokenData | undefined} =
         await this.userService.userSignIn(email, password);
-      if (!result) res.status(203).json({msg, code, result});
+      if (!result) await res.status(203).json({msg, code, result});
 
-      res.cookie('Authorization', result.accessToken, {
-        domain: '.mydiary.site',
-        httpOnly: true,
-        sameSite: 'none',
-        secure: true,
-        maxAge: 1000 * 60 * 60 * 2,
-      });
+      if (result) {
+        res.cookie('Authorization', result?.accessToken, {
+          domain: '.mydiary.site',
+          httpOnly: true,
+          sameSite: 'none',
+          secure: true,
+          maxAge: 1000 * 60 * 60 * 2,
+        });
 
-      res.cookie('Refresh', result.refreshToken, {
-        domain: '.mydiary.site',
-        httpOnly: true,
-        sameSite: 'none',
-        secure: true,
-        maxAge: 1000 * 60 * 60 * 24,
-      });
-      res.setHeader(
-        'Access-Control-Allow-Methods',
-        'GET, POST, OPTIONS, PUT, PATCH, DELETE',
-      );
-      res.setHeader('Access-Control-Allow-Credentials', 'true');
-      res.status(code).json({msg, code, result});
+        res.cookie('Refresh', result?.refreshToken, {
+          domain: '.mydiary.site',
+          httpOnly: true,
+          sameSite: 'none',
+          secure: true,
+          maxAge: 1000 * 60 * 60 * 24,
+        });
+        res.setHeader(
+          'Access-Control-Allow-Methods',
+          'GET, POST, OPTIONS, PUT, PATCH, DELETE',
+        );
+        res.setHeader('Access-Control-Allow-Credentials', 'true');
+        res.status(200).json({msg, code, result});
+      }
     } catch (error) {
       next(error);
     }

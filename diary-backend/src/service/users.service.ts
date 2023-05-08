@@ -15,8 +15,9 @@ export class UserService {
       const isDup = await this.userEmailDuplicate(user.email);
       if (isDup?.result) return isDup;
       const createUser = this.user.createUser(user);
-      if (!createUser) return {msg: '회원가입에 실패했습니다.', code: 203};
-      return {msg: '회원가입에 성공했습니다.', code: 200};
+      if (!createUser)
+        return {msg: '회원가입에 실패했습니다.', code: 'USI10002'};
+      return {msg: '회원가입에 성공했습니다.', code: 'USI10001'};
     } catch (error) {
       logger.error(error);
       throw new exceptError(400, `createUser error MSG:${error}`);
@@ -27,7 +28,7 @@ export class UserService {
     try {
       const isDup = await this.userEmailDuplicate(email);
       if (!isDup?.result)
-        throw new exceptError(409, '해당 이메일로 가입된 유저가 없습니다');
+        return {msg: isDup.msg, code: isDup.code, result: undefined};
       const findUser: Users = isDup.result;
       const match = await compare(password, findUser.password);
       if (!match) throw new exceptError(409, '비밀번호가 일치하지 않습니다');
@@ -35,7 +36,7 @@ export class UserService {
       await this.user.refreshTokenSet(email, findUser.password, refreshToken);
       return {
         msg: '로그인 성공했습니다',
-        code: 200,
+        code: 'USI2001',
         result: {accessToken, refreshToken},
       };
     } catch (error) {
@@ -60,8 +61,16 @@ export class UserService {
     try {
       const result: Users | null = await this.user.findUserByEmail(email);
       if (result)
-        return {code: 200, msg: '해당 이메일로 가입된 유저가 있습니다', result};
-      return {code: 200, msg: '해당 이메일로 가입된 유저는 없습니다', result};
+        return {
+          code: 'USD10001',
+          msg: '해당 이메일로 가입된 유저가 있습니다',
+          result,
+        };
+      return {
+        code: 'USD10002',
+        msg: '해당 이메일로 가입된 유저는 없습니다',
+        result,
+      };
     } catch (error) {
       logger.error(error);
       throw new exceptError(409, `userEmailDuplicate error MSG:${error}`);
