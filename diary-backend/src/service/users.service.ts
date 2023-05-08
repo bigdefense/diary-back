@@ -24,15 +24,23 @@ export class UserService {
   };
 
   public userSignIn = async (email: string, password: string) => {
-    const findUser: Users = await this.user.findUserByEmail(email);
-    if (!findUser)
-      throw new exceptError(409, `You're email ${email} not found`);
-    const match = await compare(password, findUser.password);
-    if (!match) throw new exceptError(409, "You're password not matching");
-    if (!match) logger.info("You're not user");
-    const {accessToken, refreshToken} = this.createToken(findUser);
-    await this.user.refreshTokenSet(email, findUser.password, refreshToken);
-    return {accessToken, refreshToken, findUser};
+    try {
+      const findUser: Users | string = await this.user.findUserByEmail(email);
+      if (typeof findUser === 'string')
+        return {msg: findUser, code: 203, result: {}};
+      const match = await compare(password, findUser.password);
+      if (!match)
+        return {msg: '비밀번호가 일치하지 않습니다.', code: 203, result: {}};
+      const {accessToken, refreshToken} = this.createToken(findUser);
+      await this.user.refreshTokenSet(email, findUser.password, refreshToken);
+      return {
+        msg: '로그인 성공했습니다',
+        code: 200,
+        result: {accessToken, refreshToken},
+      };
+    } catch (error) {
+      throw new exceptError(409, `signIn error MSG:${error}`);
+    }
   };
 
   public async userSignOut(email: string, password: string): Promise<Users> {
@@ -59,7 +67,7 @@ export class UserService {
       logger.error(error);
     }
   };
-  public createToken(user: Users): TokenData {
+  public createToken(user: Users): {accessToken: string; refreshToken: string} {
     const dataStoredInToken: DataStoredInToken = {id: user.id};
     const tokens = {
       accessToken: sign({data: dataStoredInToken}, 'secret', {expiresIn: '2h'}),
