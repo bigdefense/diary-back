@@ -47,7 +47,9 @@ export class UserService {
   public userEmailDuplicate = async (email: string) => {
     try {
       const findUser: Users = await this.user.findUserByEmail(email);
-      if (findUser) logger.info(`${409}, you're email ${email} already exists`);
+      if (findUser) {
+        logger.info(`${409}, you're email ${email} already exists`);
+      }
       return findUser ? findUser : {};
     } catch (error) {
       logger.error(error);
@@ -56,7 +58,7 @@ export class UserService {
   public createToken(user: Users): TokenData {
     const dataStoredInToken: DataStoredInToken = {id: user.id};
     const tokens = {
-      accessToken: sign({data: dataStoredInToken}, 'secret', {expiresIn: '1s'}),
+      accessToken: sign({data: dataStoredInToken}, 'secret', {expiresIn: '2h'}),
       refreshToken: sign({}, 'secret', {expiresIn: '1d'}),
     };
     return tokens;
