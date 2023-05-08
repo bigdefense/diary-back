@@ -6,6 +6,7 @@ import {CreateStickersDto, GetStickersDto} from '../dto/stickers.dto';
 import {DeleteObjectCommand} from '@aws-sdk/client-s3';
 import {myS3} from '@/config/multer';
 import {getMonthFirstDay} from '@/utils/getDateOfString';
+import exceptError from '@/utils/excetpError';
 
 export class SitckerController {
   public sticker = new StikcerService();
@@ -19,15 +20,16 @@ export class SitckerController {
       const user_id = Number(req.user.id);
       const page_tpye = req.params.type;
       const page_date = req.params.date;
-      const findAllSticker = await this.sticker.stickerAllGet(
+      const {msg, code, result} = await this.sticker.stickerAllGet(
         user_id,
         page_tpye,
         page_date,
       );
 
-      res.status(200).json({data: findAllSticker, message: 'findSticker'});
+      res.status(code).json({msg, code, result});
     } catch (error) {
       next(error);
+      throw new exceptError(500, `getSticker error ${error}`);
     }
   };
 

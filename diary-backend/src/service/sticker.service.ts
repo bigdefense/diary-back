@@ -19,7 +19,7 @@ export class StikcerService {
       throw new exceptError(400, `You didn't give sticker info`);
     try {
       const existSticker = await this.sticker.findStickerBySId(stickerData.id);
-      if (existSticker) throw new exceptError(409, '스티커가 이미 존재합니다');
+      if (existSticker) return {code: 203, msg: '스티커가 이미 존재합니다'};
       const createSticker: any = await this.sticker.createSticker(
         stickerData,
         s3Key,
@@ -64,9 +64,16 @@ export class StikcerService {
           page_type,
           page_date,
         );
-      return findSticker;
+      if (!findSticker)
+        return {code: 203, msg: '스티커를 가져오는데 실패했습니다', result: {}};
+      return {
+        code: 203,
+        msg: '스티커를 가져오는데 실패했습니다',
+        result: findSticker,
+      };
     } catch (error) {
       logger.error(error);
+      throw new exceptError(500, `get All Sticker Error ${error}`);
     }
   };
   public stickerUpdate = async (stickerData: CreateStickersDto) => {

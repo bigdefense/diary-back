@@ -6,6 +6,7 @@ import sequelize from '../database';
 import {CreateStickersDto} from '@/dto/stickers.dto';
 import {myS3} from '@/config/multer';
 import {DeleteObjectCommand} from '@aws-sdk/client-s3';
+import exceptError from '@/utils/excetpError';
 
 export class StickersDao {
   public stikcers = models.Stickers;
@@ -73,6 +74,7 @@ export class StickersDao {
         new DeleteObjectCommand({Bucket: 'mydiary-iamges', Key: s3Key}),
       );
       await transaction.rollback();
+      throw new exceptError(500, `createSticker Error MSG:${err}`);
     }
   }
 
