@@ -6,7 +6,7 @@ import {logger} from '../utils/logger';
 import sequelize from '../database';
 import {Op, Transaction} from 'sequelize';
 import exceptError from '../utils/excetpError';
-import {getMonthRangeDate} from '../utils/getMonthRangeDay';
+import {getMonthRange} from '../utils/getDateOfString';
 
 class MonthlyDao {
   public monthlys = models.MonthlyDiary;
@@ -27,11 +27,11 @@ class MonthlyDao {
     user_id: number,
   ): Promise<Array<MonthlyDiary> | null> {
     if (isEmpty(date)) throw new exceptError(400, `You didn't give Month Date`);
-    const [firstDate, lastDate]: string[] = getMonthRangeDate(date);
+    const [firstDayStr, lastDayStr]: string[] = getMonthRange(date);
     const findAllMonthlyDiary: Array<MonthlyDiary> | null =
       await this.monthlys.findAll({
         where: {
-          date: {[Op.between]: [firstDate, lastDate]},
+          date: {[Op.between]: [firstDayStr, lastDayStr]},
           user_id,
         },
       });
