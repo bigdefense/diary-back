@@ -5,7 +5,7 @@ import {RequestHandler, Response, NextFunction} from 'express';
 
 const validationMiddleware = (
   type: any,
-  value: string | 'body' | 'query' | 'params' = 'body',
+  value: string | 'body' | 'query' | 'params' | 'file' = 'body',
   skipMissingProperties = false,
   whitelist = true,
   forbidNonWhitelisted = true,
