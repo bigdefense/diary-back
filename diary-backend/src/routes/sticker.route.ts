@@ -36,7 +36,8 @@ class Sticker {
     this.router.post(
       `${this.path}/delete`,
       authMiddleware,
-      this.stickersController.deleteDaily,
+      // validationMiddleware(GetStickersDto, 'body'),
+      this.stickersController.deleteSticker,
     );
   }
 }

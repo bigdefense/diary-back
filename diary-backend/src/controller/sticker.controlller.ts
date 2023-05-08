@@ -1,5 +1,4 @@
 import {NextFunction, Response} from 'express';
-import {DailyDiary} from '../interface/dailyDiary.interface';
 import {RequestWithFile, RequestWithUser} from '../interface/auth.interface';
 import {StikcerService} from '../service/sticker.service';
 import {CreateStickersDto, GetStickersDto} from '../dto/stickers.dto';
@@ -26,7 +25,7 @@ export class SitckerController {
         page_date,
       );
 
-      res.status(code).json({msg, code, result});
+      res.status(200).json({msg, code, result});
     } catch (error) {
       next(error);
       throw new exceptError(500, `getSticker error ${error}`);
@@ -53,12 +52,13 @@ export class SitckerController {
       if (req.body.page_type === 'monthly')
         createData.page_date = getMonthFirstDay(req.body.page_date);
 
-      const createStickerData: DailyDiary = await this.sticker.stickerCreate(
-        createData,
-        s3Key,
-      );
+      const createRes = await this.sticker.stickerCreate(createData, s3Key);
 
-      res.status(201).json({data: createStickerData, message: 'created'});
+      res.status(200).json({
+        msg: createRes?.msg,
+        code: createRes?.code,
+        result: createRes?.result,
+      });
     } catch (error) {
       myS3.send(
         new DeleteObjectCommand({Bucket: 'mydiary-iamges', Key: req.file.key}),
@@ -87,16 +87,19 @@ export class SitckerController {
     }
   };
 
-  public deleteDaily = async (
+  public deleteSticker = async (
     req: RequestWithUser,
     res: Response,
     next: NextFunction,
   ) => {
     try {
       const {id} = req.body;
-      const deleteDailyData: any = await this.sticker.stickerDelete(id);
+      console.log('==================================');
+      console.log(req.body);
+      const {code, msg}: {code: string; msg: string} =
+        await this.sticker.stickerDelete(id);
 
-      res.status(200).json({data: deleteDailyData, message: 'deleted'});
+      res.status(200).json({msg, code, message: 'deleted'});
     } catch (error) {
       next(error);
     }

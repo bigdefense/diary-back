@@ -19,12 +19,17 @@ export class StikcerService {
       throw new exceptError(400, `You didn't give sticker info`);
     try {
       const existSticker = await this.sticker.findStickerBySId(stickerData.id);
-      if (existSticker) return {code: 203, msg: '스티커가 이미 존재합니다'};
+      if (existSticker)
+        return {code: 'STK10002', msg: '스티커가 이미 존재합니다', result: {}};
       const createSticker: any = await this.sticker.createSticker(
         stickerData,
         s3Key,
       );
-      return createSticker;
+      return {
+        code: 'STK10001',
+        msg: '스티커를 생성했습니다',
+        result: createSticker,
+      };
     } catch (error) {
       logger.error(error);
       myS3.send(
@@ -64,11 +69,15 @@ export class StikcerService {
           page_type,
           page_date,
         );
-      if (!findSticker)
-        return {code: 203, msg: '스티커를 가져오는데 실패했습니다', result: {}};
+      if (!findSticker || findSticker.length === 0)
+        return {
+          code: 'STK20002',
+          msg: '스티커를 가져오는데 실패했습니다',
+          result: {},
+        };
       return {
-        code: 203,
-        msg: '스티커를 가져오는데 실패했습니다',
+        code: 'STK20001',
+        msg: '해당일자의 스티커를 가지고왔습니다',
         result: findSticker,
       };
     } catch (error) {
@@ -87,12 +96,15 @@ export class StikcerService {
     }
   };
 
-  public stickerDelete = async (id: number) => {
-    if (isEmpty(id)) throw new exceptError(400, `You didn't give sticker id`);
+  public stickerDelete = async (id: string) => {
+    if (!id) throw new exceptError(400, `You didn't give sticker id`);
     try {
-      await this.sticker.deleteStickerBySid(id);
+      const res: number = await this.sticker.deleteStickerBySid(id);
+      if (res > 0) return {code: 'STK30001', msg: '스티커를 삭제했습니다'};
+      return {code: 'STK30002', msg: '스티커를 삭제하지 못했습니다'};
     } catch (error) {
       logger.error(error);
+      throw new exceptError(500, `delete Sticker Error ${error}`);
     }
   };
 }

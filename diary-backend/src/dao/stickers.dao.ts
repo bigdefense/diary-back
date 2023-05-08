@@ -21,9 +21,16 @@ export class StickersDao {
     page_type: string,
     page_date: string,
   ): Promise<Array<Stickers> | null> {
-    return await this.stikcers.findAll({
-      where: {user_id, page_type, page_date},
-    });
+    try {
+      return await this.stikcers.findAll({
+        where: {user_id, page_type, page_date},
+      });
+    } catch (error) {
+      throw new exceptError(
+        500,
+        `findAllStickerByIdWithMonth Error MSG:${error}`,
+      );
+    }
   }
 
   public async findAllStickerByIdWithWeekly(
@@ -31,16 +38,23 @@ export class StickersDao {
     page_type: string,
     page_date: Array<string>,
   ): Promise<Array<Stickers> | null> {
-    const [firstDayStr, lastDayStr] = page_date;
-    return await this.stikcers.findAll({
-      where: {
-        user_id,
-        page_type,
-        page_date: {
-          [Op.between]: [firstDayStr, lastDayStr],
+    try {
+      const [firstDayStr, lastDayStr] = page_date;
+      return await this.stikcers.findAll({
+        where: {
+          user_id,
+          page_type,
+          page_date: {
+            [Op.between]: [firstDayStr, lastDayStr],
+          },
         },
-      },
-    });
+      });
+    } catch (error) {
+      throw new exceptError(
+        500,
+        `findAllStickerByIdWithWeekly Error MSG:${error}`,
+      );
+    }
   }
 
   public async findAllStickerById(
@@ -48,9 +62,13 @@ export class StickersDao {
     page_type: string,
     page_date: string,
   ): Promise<Array<Stickers> | null> {
-    return await this.stikcers.findAll({
-      where: {user_id, page_type, page_date},
-    });
+    try {
+      return await this.stikcers.findAll({
+        where: {user_id, page_type, page_date},
+      });
+    } catch (error) {
+      throw new exceptError(500, `findAllStickerById Error MSG:${error}`);
+    }
   }
 
   public async createSticker(
@@ -65,11 +83,10 @@ export class StickersDao {
         },
         {transaction},
       );
-      if (!createStickerData) throw new Error('스티커 생성 실패');
+      if (!createStickerData) throw new exceptError(400, '스티커 생성 실패');
       await transaction.commit();
       return createStickerData;
     } catch (err) {
-      logger.error('createSticker err =', err);
       myS3.send(
         new DeleteObjectCommand({Bucket: 'mydiary-iamges', Key: s3Key}),
       );
@@ -106,7 +123,7 @@ export class StickersDao {
     }
   }
 
-  public async deleteStickerBySid(id: number): Promise<number | void> {
+  public async deleteStickerBySid(id: number): Promise<number> {
     const transaction: Transaction = await sequelize.transaction();
     try {
       const findSticker: Stickers | null = await this.stikcers.findOne({
@@ -128,6 +145,7 @@ export class StickersDao {
     } catch (err) {
       logger.error(err);
       await transaction.rollback();
+      throw new exceptError(500, `deleteStickerBySid Error MSG:${err}`);
     }
   }
 }
