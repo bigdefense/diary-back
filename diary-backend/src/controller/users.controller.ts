@@ -3,6 +3,7 @@ import {Request, Response, NextFunction} from 'express';
 import {Users} from '../interface/users.interface';
 import {UserService} from '../service/users.service';
 import {RequestWithUser, TokenData} from '../interface/auth.interface';
+import exceptError from '@/utils/excetpError';
 
 class UsersController {
   public userService = new UserService();
@@ -84,19 +85,17 @@ class UsersController {
   ) => {
     try {
       const {email, password} = req.user;
-      const logOutUserData: Users = await this.userService.userSignOut(
-        email,
-        password,
-      );
+      await this.userService.userSignOut(email, password);
       res.clearCookie('Authorization');
       res.clearCookie('Refresh');
       res.setHeader(
         'Access-Control-Allow-Methods',
         'GET, POST, OPTIONS, PUT, PATCH, DELETE',
       );
-      res.status(200).json({data: logOutUserData, message: 'logout'});
+      res.status(200).json({msg: '로그아웃 되었습니다', code: 200});
     } catch (error) {
       next(error);
+      throw new exceptError(500, '로그아웃 실패');
     }
   };
 
