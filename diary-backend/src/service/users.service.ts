@@ -12,10 +12,14 @@ export class UserService {
 
   public userSignUp = async (user: Users) => {
     try {
-      await this.userEmailDuplicate(user.email);
-      await this.user.createUser(user);
+      const isDup = await this.userEmailDuplicate(user.email);
+      if (isDup) return {msg: '이미 존재하는 이메일입니다.', code: 203};
+      const createUser = this.user.createUser(user);
+      if (!createUser) return {msg: '회원가입에 실패했습니다.', code: 203};
+      return {msg: '회원가입에 성공했습니다.', code: 200};
     } catch (error) {
       logger.error(error);
+      throw new exceptError(400, `createUser error MSG:${error}`);
     }
   };
 

@@ -47,6 +47,7 @@ class UsersDao {
     } catch (e) {
       logger.error(e);
       await transaction.rollback();
+      throw new exceptError(400, 'createUser error');
     }
   }
   public async refreshTokenSet(
