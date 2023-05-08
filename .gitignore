@@ -10,3 +10,5 @@ certificate.key
 private.key
 config
 launch.json
+dist
+.pm2logs
