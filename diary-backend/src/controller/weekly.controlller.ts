@@ -15,9 +15,9 @@ export class weeklyController {
     try {
       const date = req.params.date;
       const user_id = Number(req.user.id);
-      const findweeklyDiary = await this.weekly.weeklyRead(date, user_id);
+      const {msg, code, result} = await this.weekly.weeklyRead(date, user_id);
 
-      res.status(200).json({data: findweeklyDiary, message: 'findDiary'});
+      res.status(200).json({msg, code, result});
     } catch (error) {
       next(error);
     }
@@ -34,11 +34,9 @@ export class weeklyController {
         user_id: Number(req.user.id),
         ...getweeklyData,
       };
-      const createweeklyData: WeeklyDiary = await this.weekly.weeklyWrite(
-        createData,
-      );
+      const {msg, code, result} = await this.weekly.weeklyWrite(createData);
 
-      res.status(201).json({data: createweeklyData, message: 'created'});
+      res.status(200).json({msg, code, result});
     } catch (error) {
       next(error);
     }
@@ -55,10 +53,10 @@ export class weeklyController {
         user_id: Number(req.user.id),
         ...getweeklyData,
       };
-      const updateweeklyData: any = await this.weekly.weeklyUpdate(
+      const {msg, code, result} = await this.weekly.weeklyUpdate(
         createweeklyData,
       );
-      res.status(200).json({data: updateweeklyData, message: 'updated'});
+      res.status(200).json({msg, code, result});
     } catch (error) {
       next(error);
     }
@@ -72,12 +70,9 @@ export class weeklyController {
     try {
       const {date} = req.body;
       const userId = Number(req.user.id);
-      const deleteweeklyData: any = await this.weekly.weeklyDelete(
-        date,
-        userId,
-      );
+      const {msg, code, result} = await this.weekly.weeklyDelete(date, userId);
 
-      res.status(200).json({data: deleteweeklyData, message: 'deleted'});
+      res.status(200).json({msg, code, result});
     } catch (error) {
       next(error);
     }

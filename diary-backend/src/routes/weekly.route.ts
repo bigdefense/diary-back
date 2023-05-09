@@ -2,7 +2,7 @@ import {Router} from 'express';
 import validationMiddleware from '../middleware/validation.middleware';
 import {weeklyController} from '../controller/weekly.controlller';
 import {authMiddleware} from '../middleware/auth.middleware';
-import {GetWeeklyDto} from '@/dto/weekly.dto';
+import {DeleteWeeklyDto, GetWeeklyDto} from '../dto/weekly.dto';
 
 class Weekly {
   public path = '/weekly';
@@ -30,7 +30,7 @@ class Weekly {
     this.router.post(
       `${this.path}/delete`,
       authMiddleware,
-      validationMiddleware(GetWeeklyDto, 'body'),
+      validationMiddleware(DeleteWeeklyDto, 'body'),
       this.usersController.deleteweekly,
     );
   }

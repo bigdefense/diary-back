@@ -16,11 +16,28 @@ export class weeklyService {
         weeklyDiary.date,
         weeklyDiary.user_id,
       );
-      if (existweekly) return existweekly;
-      const createweeklyData: any = await this.weekly.createWeekly(weeklyDiary);
-      return createweeklyData;
+      if (existweekly)
+        return {
+          msg: '해당 일자에 다이어리가 존재합니다',
+          code: 'WDADU10001',
+          result: existweekly,
+        };
+      const createweeklyData = await this.weekly.createWeekly(weeklyDiary);
+      if (!createweeklyData)
+        return {
+          msg: '다이어리 작성에 실패했습니다',
+          code: 'WDAC10002',
+          result: createweeklyData,
+        };
+
+      return {
+        msg: '다이어리 작성에 성공했습니다',
+        code: 'WDAC10001',
+        result: createweeklyData,
+      };
     } catch (error) {
       logger.error(error);
+      throw new exceptError(500, `weeklyWrite Error MSG ${error}`);
     }
   };
 
@@ -30,9 +47,20 @@ export class weeklyService {
     try {
       const findDiary: WeeklyDiary[] | null =
         await this.weekly.findWeeklyDiaryByWeekRange(weeklyDate, user_id);
-      return findDiary;
+      if (!findDiary)
+        return {
+          msg: '해당 일자에 다이어리가 존재하지 않습니다',
+          code: 'WDAR10002',
+          result: findDiary,
+        };
+      return {
+        msg: '해당 일자에 다이어리가 존재합니다',
+        code: 'WDAR10001',
+        result: findDiary,
+      };
     } catch (error) {
       logger.error(error);
+      throw new exceptError(500, `weeklyRead Error MSG ${error}`);
     }
   };
   public weeklyUpdate = async (weeklyDiary: CreateWeeklyDto) => {
@@ -42,9 +70,20 @@ export class weeklyService {
       const updateweeklyData = await this.weekly.updateWeeklyDiaryByDate(
         weeklyDiary,
       );
-      return updateweeklyData;
+      if (!updateweeklyData)
+        return {
+          msg: '해당 일자에 다이어리를 수정 실패했습니다',
+          code: 'WDAU10002',
+          result: updateweeklyData,
+        };
+      return {
+        msg: '해당 일자에 다이어리를 수정 성공했습니이',
+        code: 'WDAU10001',
+        result: updateweeklyData,
+      };
     } catch (error) {
       logger.error(error);
+      throw new exceptError(500, `weeklyUpdate Error MSG ${error}`);
     }
   };
 
@@ -52,9 +91,24 @@ export class weeklyService {
     if (isEmpty(weeklyDate))
       throw new exceptError(400, `You didn't give weekly info`);
     try {
-      await this.weekly.deleteWeeklyDiaryByDate(weeklyDate, user_id);
+      const deleteCnt = await this.weekly.deleteWeeklyDiaryByDate(
+        weeklyDate,
+        user_id,
+      );
+      if (!deleteCnt)
+        return {
+          msg: '해당 일자에 다이어리를 삭제 실패했습니다',
+          code: 'WDAD10002',
+          result: deleteCnt,
+        };
+      return {
+        msg: '해당 일자에 다이어리를 삭제 성공했습니다',
+        code: 'WDAD10001',
+        result: deleteCnt,
+      };
     } catch (error) {
       logger.error(error);
+      throw new exceptError(500, `weeklyDelete Error MSG ${error}`);
     }
   };
 }

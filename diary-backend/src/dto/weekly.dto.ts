@@ -1,4 +1,4 @@
-import {IsDate, IsDateString, IsNumber, IsString} from 'class-validator';
+import {IsDateString, IsString} from 'class-validator';
 
 export class GetWeeklyDto {
   @IsString()
@@ -8,6 +8,10 @@ export class GetWeeklyDto {
   public date!: string;
 }
 
+export class DeleteWeeklyDto {
+  @IsDateString()
+  public date!: string;
+}
 export interface CreateWeeklyDto {
   user_id: number;
   content: string;
