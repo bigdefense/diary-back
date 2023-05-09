@@ -36,7 +36,7 @@ export class UserService {
       await this.user.refreshTokenSet(email, findUser.password, refreshToken);
       return {
         msg: '로그인 성공했습니다',
-        code: 'USI2001',
+        code: 'USI20001',
         result: {accessToken, refreshToken},
       };
     } catch (error) {
