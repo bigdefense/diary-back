@@ -15,9 +15,9 @@ export class DailyController {
     try {
       const date = req.params.date;
       const user_id = Number(req.user.id);
-      const findDailyDiary = await this.daily.dailyRead(date, user_id);
+      const {msg, code, result} = await this.daily.dailyRead(date, user_id);
 
-      res.status(200).json({data: findDailyDiary, message: 'findDiary'});
+      res.status(200).json({msg, code, result});
     } catch (error) {
       next(error);
     }
@@ -34,11 +34,9 @@ export class DailyController {
         user_id: Number(req.user.id),
         ...getDailyData,
       };
-      const createDailyData: DailyDiary = await this.daily.dailyWrite(
-        createData,
-      );
+      const {msg, code, result} = await this.daily.dailyWrite(createData);
 
-      res.status(201).json({data: createDailyData, message: 'created'});
+      res.status(200).json({msg, code, result});
     } catch (error) {
       next(error);
     }
@@ -55,10 +53,8 @@ export class DailyController {
         user_id: Number(req.user.id),
         ...getDailyData,
       };
-      const updateDailyData: any = await this.daily.dailyUpdate(
-        createDailyData,
-      );
-      res.status(200).json({data: updateDailyData, message: 'updated'});
+      const {msg, code, result} = await this.daily.dailyUpdate(createDailyData);
+      res.status(200).json({msg, code, result});
     } catch (error) {
       next(error);
     }
@@ -72,9 +68,9 @@ export class DailyController {
     try {
       const {date} = req.body;
       const userId = Number(req.user.id);
-      const deleteDailyData: any = await this.daily.dailyDelete(date, userId);
+      const {msg, code, result} = await this.daily.dailyDelete(date, userId);
 
-      res.status(200).json({data: deleteDailyData, message: 'deleted'});
+      res.status(200).json({msg, code, result});
     } catch (error) {
       next(error);
     }
