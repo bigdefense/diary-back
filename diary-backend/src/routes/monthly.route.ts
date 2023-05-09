@@ -1,6 +1,6 @@
 import {Router} from 'express';
 import validationMiddleware from '../middleware/validation.middleware';
-import {GetMonthlyDto} from '../dto/monthly.dto';
+import {DeleteMonthlyDto, GetMonthlyDto} from '../dto/monthly.dto';
 import {MonthlyController} from '../controller/monthly.controlller';
 import {authMiddleware} from '../middleware/auth.middleware';
 
@@ -29,7 +29,7 @@ class Monthly {
     );
     this.router.post(
       `${this.path}/delete`,
-      validationMiddleware(GetMonthlyDto, 'body'),
+      validationMiddleware(DeleteMonthlyDto, 'body'),
       authMiddleware,
       this.usersController.deleteMonthly,
     );

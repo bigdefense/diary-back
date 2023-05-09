@@ -26,17 +26,25 @@ class MonthlyDao {
     date: string,
     user_id: number,
   ): Promise<Array<MonthlyDiary> | null> {
-    if (isEmpty(date)) throw new exceptError(400, `You didn't give Month Date`);
-    const [firstDayStr, lastDayStr]: string[] = getMonthRange(date);
-    const findAllMonthlyDiary: Array<MonthlyDiary> | null =
-      await this.monthlys.findAll({
-        where: {
-          date: {[Op.between]: [firstDayStr, lastDayStr]},
-          user_id,
-        },
-      });
-
-    return findAllMonthlyDiary;
+    try {
+      if (isEmpty(date))
+        throw new exceptError(400, `You didn't give Month Date`);
+      const [firstDayStr, lastDayStr]: string[] = getMonthRange(date);
+      const findAllMonthlyDiary: Array<MonthlyDiary> | null =
+        await this.monthlys.findAll({
+          where: {
+            date: {[Op.between]: [firstDayStr, lastDayStr]},
+            user_id,
+          },
+        });
+      return findAllMonthlyDiary;
+    } catch (error) {
+      logger.error(error);
+      throw new exceptError(
+        500,
+        `findAllMonthlyDiaryByDate Error MSG ${error}`,
+      );
+    }
   }
 
   public async updateMonthlyDiaryByDate(

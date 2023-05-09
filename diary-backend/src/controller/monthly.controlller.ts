@@ -15,9 +15,9 @@ export class MonthlyController {
     try {
       const date = req.params.date;
       const user_id = Number(req.user.id);
-      const findMonthlyDiary = await this.Monthly.MonthlyRead(date, user_id);
+      const {msg, code, result} = await this.Monthly.MonthlyRead(date, user_id);
 
-      res.status(200).json({data: findMonthlyDiary, message: 'findMonthDiary'});
+      res.status(200).json({msg, code, result});
     } catch (error) {
       next(error);
     }
@@ -34,13 +34,9 @@ export class MonthlyController {
         user_id: Number(req.user.id),
         ...getMonthlyData,
       };
-      const createMonthlyData: MonthlyDiary = await this.Monthly.MonthlyWrite(
-        createData,
-      );
+      const {msg, code, result} = await this.Monthly.MonthlyWrite(createData);
 
-      res
-        .status(201)
-        .json({data: createMonthlyData, message: 'MonthDairycreated'});
+      res.status(200).json({msg, code, result});
     } catch (error) {
       next(error);
     }
@@ -57,10 +53,10 @@ export class MonthlyController {
         user_id: Number(req.user.id),
         ...getMonthlyData,
       };
-      const updateMonthlyData: any = await this.Monthly.MonthlyUpdate(
+      const {msg, code, result} = await this.Monthly.MonthlyUpdate(
         createMonthlyData,
       );
-      res.status(200).json({data: updateMonthlyData, message: 'MonthUpdated'});
+      res.status(200).json({msg, code, result});
     } catch (error) {
       next(error);
     }
@@ -74,12 +70,12 @@ export class MonthlyController {
     try {
       const {date} = req.body;
       const userId = Number(req.user.id);
-      const deleteMonthlyData: any = await this.Monthly.MonthlyDelete(
+      const {msg, code, result} = await this.Monthly.MonthlyDelete(
         date,
         userId,
       );
 
-      res.status(200).json({data: deleteMonthlyData, message: 'MonthDeleted'});
+      res.status(200).json({msg, code, result});
     } catch (error) {
       next(error);
     }

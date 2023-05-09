@@ -14,6 +14,11 @@ export class GetMonthlyDto {
   public date!: string;
 }
 
+export class DeleteMonthlyDto {
+  @IsDateString()
+  public date!: string;
+}
+
 export class CreateMonthlyDto {
   @IsNumber()
   public user_id!: number;
