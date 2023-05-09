@@ -27,6 +27,10 @@ export class GetStickersDto {
   @IsString()
   public image_name!: string;
 }
+export class DeleteStickersDto {
+  @IsUUID()
+  public id!: number;
+}
 
 export class CreateStickersDto {
   @IsUUID()

@@ -11,6 +11,11 @@ export class GetDailyDto {
   public date!: string;
 }
 
+export class DeleteDailyDto {
+  @IsDateString()
+  public date!: string;
+}
+
 export class CreateDailyDto {
   @IsNumber()
   public user_id!: number;

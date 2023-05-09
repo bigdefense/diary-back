@@ -1,6 +1,6 @@
 import {Router} from 'express';
 import validationMiddleware from '../middleware/validation.middleware';
-import {GetDailyDto} from '../dto/daily.dto';
+import {GetDailyDto, DeleteDailyDto} from '../dto/daily.dto';
 import {DailyController} from '../controller/daily.controlller';
 import {authMiddleware} from '../middleware/auth.middleware';
 
@@ -30,7 +30,7 @@ class Daily {
     this.router.post(
       `${this.path}/delete`,
       authMiddleware,
-      validationMiddleware(GetDailyDto, 'body'),
+      validationMiddleware(DeleteDailyDto, 'body'),
       this.usersController.deleteDaily,
     );
   }
