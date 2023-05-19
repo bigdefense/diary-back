@@ -13,13 +13,14 @@ export class weeklyService {
       throw new exceptError(400, `You didn't give weekly info`);
     try {
       const existweekly = await this.weekly.findWeeklyDiaryByDate(
-        weeklyDiary.date,
         weeklyDiary.user_id,
+        weeklyDiary.string_of_week,
+        weeklyDiary.number_of_week,
       );
       if (existweekly)
         return {
           msg: '해당 일자에 다이어리가 존재합니다',
-          code: 'WDADU10001',
+          code: 'WDADU10002',
           result: existweekly,
         };
       const createweeklyData = await this.weekly.createWeekly(weeklyDiary);
@@ -41,12 +42,12 @@ export class weeklyService {
     }
   };
 
-  public weeklyRead = async (weeklyDate: string, user_id: number) => {
-    if (isEmpty(weeklyDate))
+  public weeklyRead = async (string_of_week: string, user_id: number) => {
+    if (isEmpty(string_of_week))
       throw new exceptError(400, `You didn't give weekly info`);
     try {
       const findDiary: WeeklyDiary[] | null =
-        await this.weekly.findWeeklyDiaryByWeekRange(weeklyDate, user_id);
+        await this.weekly.findWeeklyDiaryByWeekRange(user_id, string_of_week);
       if (!findDiary)
         return {
           msg: '해당 일자에 다이어리가 존재하지 않습니다',
@@ -87,12 +88,17 @@ export class weeklyService {
     }
   };
 
-  public weeklyDelete = async (weeklyDate: string, user_id: number) => {
-    if (isEmpty(weeklyDate))
+  public weeklyDelete = async (
+    string_of_week: string,
+    number_of_week: number,
+    user_id: number,
+  ) => {
+    if (isEmpty(number_of_week || string_of_week))
       throw new exceptError(400, `You didn't give weekly info`);
     try {
       const deleteCnt = await this.weekly.deleteWeeklyDiaryByDate(
-        weeklyDate,
+        string_of_week,
+        number_of_week,
         user_id,
       );
       if (!deleteCnt)
