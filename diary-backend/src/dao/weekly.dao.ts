@@ -12,28 +12,30 @@ class WeeklyDao {
   public Weeklys = models.WeeklyDiary;
 
   public async findWeeklyDiaryByDate(
-    date: string,
     user_id: number,
+    string_of_week: string,
+    number_of_week: number,
   ): Promise<WeeklyDiary | null> {
-    if (isEmpty(date))
+    if (isEmpty(number_of_week || string_of_week))
       throw new exceptError(400, `You didn't give Weekly Date`);
     const findWeeklyDiary: WeeklyDiary | null = await this.Weeklys.findOne({
-      where: {date, user_id},
+      where: {user_id, string_of_week, number_of_week},
     });
     return findWeeklyDiary;
   }
 
   public async findWeeklyDiaryByWeekRange(
-    date: string,
     user_id: number,
+    string_of_week: string,
   ): Promise<WeeklyDiary[] | null> {
-    if (isEmpty(date))
+    if (isEmpty(string_of_week))
       throw new exceptError(400, `You didn't give Weekly Date`);
-    const [firstDayStr, lastDayStr] = getWeekRange(date);
+    console.log(string_of_week);
     const findWeeklyDiary: WeeklyDiary[] | null = await this.Weeklys.findAll({
       where: {
-        date: {
-          [Op.between]: [firstDayStr, lastDayStr],
+        string_of_week,
+        number_of_week: {
+          [Op.between]: [0, 7],
         },
         user_id,
       },
@@ -47,14 +49,24 @@ class WeeklyDao {
     const transaction: Transaction = await sequelize.transaction();
     try {
       const findWeeklyDiary: WeeklyDiary | null = await this.Weeklys.findOne({
-        where: {date: WeeklyDate.date},
+        where: {
+          string_of_week: WeeklyDate.string_of_week,
+          number_of_week: WeeklyDate.number_of_week,
+          user_id: WeeklyDate.user_id,
+        },
       });
       if (!findWeeklyDiary) throw new exceptError(400, `You are not user`);
       const updateWeeklyDiary: [number] = await this.Weeklys.update(
         {
           ...WeeklyDate,
         },
-        {where: {date: WeeklyDate.date, user_id: WeeklyDate.user_id}},
+        {
+          where: {
+            string_of_week: WeeklyDate.string_of_week,
+            number_of_week: WeeklyDate.number_of_week,
+            user_id: WeeklyDate.user_id,
+          },
+        },
       );
       await transaction.commit();
       return updateWeeklyDiary;
@@ -65,17 +77,26 @@ class WeeklyDao {
   }
 
   public async deleteWeeklyDiaryByDate(
-    date: string,
+    string_of_week: string,
+    number_of_week: number,
     user_id: number,
   ): Promise<number | void> {
     const transaction: Transaction = await sequelize.transaction();
     try {
       const findWeeklyDiary: WeeklyDiary | null = await this.Weeklys.findOne({
-        where: {date},
+        where: {
+          string_of_week,
+          number_of_week,
+          user_id,
+        },
       });
       if (!findWeeklyDiary) throw new exceptError(400, `You are not user`);
       const deleteWeeklyDiary: number = await this.Weeklys.destroy({
-        where: {date, user_id},
+        where: {
+          string_of_week,
+          number_of_week,
+          user_id,
+        },
       });
       await transaction.commit();
       return deleteWeeklyDiary;

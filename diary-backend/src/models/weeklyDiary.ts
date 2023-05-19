@@ -3,7 +3,7 @@ import {WeeklyDiary} from '../interface/weeklyDiary.interface';
 
 export type MonthlyDiaryCreationAttributes = Optional<
   WeeklyDiary,
-  'id' | 'user_id' | 'content' | 'date'
+  'id' | 'user_id' | 'content' | 'date' | 'string_of_week' | 'number_of_week'
 >;
 
 export class WeeklyDiaryModel
@@ -15,6 +15,8 @@ export class WeeklyDiaryModel
   public title!: string;
   public content!: string;
   public date!: string;
+  public string_of_week!: string;
+  public number_of_week!: number;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -43,6 +45,14 @@ export default function (sequelize: Sequelize): typeof WeeklyDiaryModel {
       },
       date: {
         type: DataTypes.DATEONLY,
+        allowNull: true,
+      },
+      string_of_week: {
+        type: DataTypes.STRING(20),
+        allowNull: false,
+      },
+      number_of_week: {
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
     },
