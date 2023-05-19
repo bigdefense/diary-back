@@ -3,7 +3,7 @@ import models from '../models/init-models';
 import {logger} from '@/utils/logger';
 import {Op, Transaction} from 'sequelize';
 import sequelize from '../database';
-import {CreateStickersDto} from '@/dto/stickers.dto';
+import {CreateStickersDto, UpdateStickersDto} from '@/dto/stickers.dto';
 import {myS3} from '@/config/multer';
 import {DeleteObjectCommand} from '@aws-sdk/client-s3';
 import exceptError from '@/utils/excetpError';
@@ -96,7 +96,7 @@ export class StickersDao {
   }
 
   public async updateStickerBySid(
-    stickerData: CreateStickersDto,
+    stickerData: UpdateStickersDto,
   ): Promise<[number] | void> {
     const transaction: Transaction = await sequelize.transaction();
     try {

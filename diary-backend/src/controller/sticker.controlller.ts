@@ -5,6 +5,7 @@ import {
   CreateStickersDto,
   GetStickersDto,
   UpdateStickersDto,
+  updateStickersDto,
 } from '../dto/stickers.dto';
 import {DeleteObjectCommand} from '@aws-sdk/client-s3';
 import {myS3} from '@/config/multer';
@@ -80,9 +81,9 @@ export class SitckerController {
   ) => {
     try {
       const getStickerData: UpdateStickersDto = req.body;
-      const createData: CreateStickersDto = {
-        user_id: Number(req.user.id),
+      const createData: UpdateStickersDto = {
         ...getStickerData,
+        user_id: Number(req.user.id),
       };
       const {msg, code, result} = await this.sticker.stickerUpdate(createData);
       res.status(200).json({msg, code, result});
