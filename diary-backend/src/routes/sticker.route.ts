@@ -3,7 +3,11 @@ import validationMiddleware from '../middleware/validation.middleware';
 import {GetDailyDto} from '../dto/daily.dto';
 import {authMiddleware} from '../middleware/auth.middleware';
 import {SitckerController} from '../controller/sticker.controlller';
-import {DeleteStickersDto, GetStickersDto} from '../dto/stickers.dto';
+import {
+  DeleteStickersDto,
+  GetStickersDto,
+  UpdateStickersDto,
+} from '../dto/stickers.dto';
 import multer from 'multer';
 import {multerConfig} from '../config/multer';
 
@@ -30,7 +34,7 @@ class Sticker {
     this.router.post(
       `${this.path}/update`,
       authMiddleware,
-      validationMiddleware(GetStickersDto, 'body'),
+      validationMiddleware(UpdateStickersDto, 'body'),
       this.stickersController.updateSticker,
     );
     this.router.post(
