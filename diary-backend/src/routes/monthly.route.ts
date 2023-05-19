@@ -11,7 +11,7 @@ class Monthly {
   constructor() {
     this.router.get(
       `${this.path}/read/:date`,
-      validationMiddleware(GetMonthlyDto, 'body'),
+      // validationMiddleware(GetMonthlyDto, 'body'),
       authMiddleware,
       this.usersController.getMonthly,
     );
