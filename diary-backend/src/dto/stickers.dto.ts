@@ -6,6 +6,20 @@ import {
   IsArray,
 } from 'class-validator';
 
+export class UpdateStickersDto {
+  @IsUUID()
+  public id!: number;
+
+  @IsString()
+  public page_type!: string;
+
+  @ArrayNotEmpty()
+  public position!: Array<number>;
+
+  @ArrayNotEmpty()
+  public size!: Array<number>;
+}
+
 export class GetStickersDto {
   @IsUUID()
   public id!: number;
@@ -51,10 +65,10 @@ export class CreateStickersDto {
   @ArrayNotEmpty()
   public size!: Array<number>;
 
-  public image!: string;
+  public image?: string;
 
   @IsString()
-  public image_name!: string;
+  public image_name?: string;
 }
 
 export class updateStickersDto {

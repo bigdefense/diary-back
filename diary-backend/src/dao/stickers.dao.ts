@@ -123,7 +123,7 @@ export class StickersDao {
     }
   }
 
-  public async deleteStickerBySid(id: number): Promise<number> {
+  public async deleteStickerBySid(id: string): Promise<number> {
     const transaction: Transaction = await sequelize.transaction();
     try {
       const findSticker: Stickers | null = await this.stikcers.findOne({

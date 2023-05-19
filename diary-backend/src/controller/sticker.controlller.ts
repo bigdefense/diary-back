@@ -1,7 +1,11 @@
 import {NextFunction, Response} from 'express';
 import {RequestWithFile, RequestWithUser} from '../interface/auth.interface';
 import {StikcerService} from '../service/sticker.service';
-import {CreateStickersDto, GetStickersDto} from '../dto/stickers.dto';
+import {
+  CreateStickersDto,
+  GetStickersDto,
+  UpdateStickersDto,
+} from '../dto/stickers.dto';
 import {DeleteObjectCommand} from '@aws-sdk/client-s3';
 import {myS3} from '@/config/multer';
 import {getMonthFirstDay} from '@/utils/getDateOfString';
@@ -38,6 +42,8 @@ export class SitckerController {
     next: NextFunction,
   ) => {
     try {
+      // console.log(req.body);
+      // console.log(req.file);
       if (!req.file) throw new Error('file is not exist');
 
       const getStickerData: GetStickersDto = req.body;
@@ -50,7 +56,7 @@ export class SitckerController {
       };
 
       if (req.body.page_type === 'monthly')
-        createData.page_date = getMonthFirstDay(req.body.page_date);
+        createData.page_date = await getMonthFirstDay(req.body.page_date);
 
       const createRes = await this.sticker.stickerCreate(createData, s3Key);
 
@@ -73,17 +79,16 @@ export class SitckerController {
     next: NextFunction,
   ) => {
     try {
-      const getStickerData: GetStickersDto = req.body;
+      const getStickerData: UpdateStickersDto = req.body;
       const createData: CreateStickersDto = {
         user_id: Number(req.user.id),
         ...getStickerData,
       };
-      const updateStickerData: any = await this.sticker.stickerUpdate(
-        createData,
-      );
-      res.status(200).json({data: updateStickerData, message: 'updated'});
+      const {msg, code, result} = await this.sticker.stickerUpdate(createData);
+      res.status(200).json({msg, code, result});
     } catch (error) {
       next(error);
+      throw new exceptError(500, `updateSticker error ${error}`);
     }
   };
 

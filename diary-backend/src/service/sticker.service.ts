@@ -20,13 +20,13 @@ export class StikcerService {
     try {
       const existSticker = await this.sticker.findStickerBySId(stickerData.id);
       if (existSticker)
-        return {code: 'STK10002', msg: '스티커가 이미 존재합니다', result: {}};
+        return {code: 'STKC10002', msg: '스티커가 이미 존재합니다', result: {}};
       const createSticker: any = await this.sticker.createSticker(
         stickerData,
         s3Key,
       );
       return {
-        code: 'STK10001',
+        code: 'STKC10001',
         msg: '스티커를 생성했습니다',
         result: createSticker,
       };
@@ -71,12 +71,12 @@ export class StikcerService {
         );
       if (!findSticker || findSticker.length === 0)
         return {
-          code: 'STK20002',
+          code: 'STKR10002',
           msg: '스티커를 가져오는데 실패했습니다',
           result: {},
         };
       return {
-        code: 'STK20001',
+        code: 'STKR10001',
         msg: '해당일자의 스티커를 가지고왔습니다',
         result: findSticker,
       };
@@ -90,9 +90,21 @@ export class StikcerService {
       throw new exceptError(400, `You didn't give sticker info`);
     try {
       const updateSticker = await this.sticker.updateStickerBySid(stickerData);
-      return updateSticker;
+      if (!updateSticker)
+        return {
+          code: 'STKU10002',
+          msg: '스티커를 수정하지 못했습니다',
+          result: {},
+        };
+
+      return {
+        code: 'STKU10001',
+        msg: '스티커를 수정했습니다',
+        result: updateSticker,
+      };
     } catch (error) {
       logger.error(error);
+      throw new exceptError(500, `update Sticker Error ${error}`);
     }
   };
 
@@ -100,8 +112,8 @@ export class StikcerService {
     if (!id) throw new exceptError(400, `You didn't give sticker id`);
     try {
       const res: number = await this.sticker.deleteStickerBySid(id);
-      if (res > 0) return {code: 'STK30001', msg: '스티커를 삭제했습니다'};
-      return {code: 'STK30002', msg: '스티커를 삭제하지 못했습니다'};
+      if (res > 0) return {code: 'STKR10001', msg: '스티커를 삭제했습니다'};
+      return {code: 'STKR10002', msg: '스티커를 삭제하지 못했습니다'};
     } catch (error) {
       logger.error(error);
       throw new exceptError(500, `delete Sticker Error ${error}`);

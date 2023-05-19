@@ -51,11 +51,11 @@ export default function (sequelize: Sequelize): typeof StickersModel {
         allowNull: false,
       },
       position: {
-        type: DataTypes.ARRAY(DataTypes.INTEGER),
+        type: DataTypes.ARRAY(DataTypes.FLOAT),
         allowNull: false,
       },
       size: {
-        type: DataTypes.ARRAY(DataTypes.INTEGER),
+        type: DataTypes.ARRAY(DataTypes.FLOAT),
         allowNull: false,
       },
       image: {
