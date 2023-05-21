@@ -1,7 +1,7 @@
 import {Router} from 'express';
 import UsersController from '../controller/users.controller';
 import validationMiddleware from '../middleware/validation.middleware';
-import {UserDto} from '../dto/users.dto';
+import {GetUserDto, UserDto} from '../dto/users.dto';
 import {authMiddleware} from '../middleware/auth.middleware';
 
 class Users {
@@ -13,7 +13,11 @@ class Users {
       `${this.path}/profile`,
       authMiddleware,
       validationMiddleware(UserDto, 'body'),
-      this.usersController.userPorfile,
+      this.usersController.getUserPorfile,
+    );
+    this.router.get(
+      `${this.path}/oauth/google`,
+      this.usersController.googleSignUp,
     );
     this.router.post(
       `${this.path}/signup`,
@@ -30,6 +34,11 @@ class Users {
       authMiddleware,
       this.usersController.userSignOut,
     );
+    this.router.get(
+      `${this.path}/email-verify/:email_code/:userEmail`,
+      this.usersController.getEmailVerify,
+    );
+    // this.router.post(`${this.path}/email`, this.usersController.mailVerify);
   }
 }
 
