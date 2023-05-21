@@ -1,11 +1,11 @@
 export interface UsersInterFace {
-  id: number;
+  id?: number;
   email: string;
   password: string;
   name: string;
   image: string;
   image_type: string;
-  refresh: string;
-  email_code: string;
-  verified: boolean;
+  refresh?: string;
+  email_code?: string;
+  verified?: boolean;
 }
